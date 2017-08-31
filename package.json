@@ -1,0 +1,40 @@
+{
+  "name": "anim",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "tape ./tests/**/*.js | tap-dot --color",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "test": {
+      "patterns": ["src", "tests"],
+      "extensions": "js",
+      "quiet": true
+    }
+  },
+  "author": "An Cao <an@ancaois.me>",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "faucet": "0.0.1",
+    "npm-watch": "^0.2.0",
+    "rollup": "^0.49.2",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^8.2.0",
+    "rollup-plugin-filesize": "^1.4.2",
+    "rollup-plugin-includepaths": "^0.2.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "tap-dot": "^1.0.5",
+    "tape": "^4.8.0",
+    "tape-watch": "^2.3.0",
+    "uglify-js": "^3.0.28"
+  },
+  "dependencies": {}
+}
