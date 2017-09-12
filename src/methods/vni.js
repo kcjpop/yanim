@@ -1,11 +1,13 @@
+const contains = require('../utils/contains')
+
 const toNull = char => char !== ' ' ? char : null
 
 function accentForOne (char, key) {
   const keyMap = {
     //    1234567890
     'a': 'áàảãạâ ă a'.split('').map(toNull),
-    'ă': 'ắằẳẵặ  a a'.split('').map(toNull),
-    'â': 'ấầẩẫậa   a'.split('').map(toNull),
+    'ă': 'ắằẳẵặâ   a'.split('').map(toNull),
+    'â': 'ấầẩẫậ  ă a'.split('').map(toNull),
     'e': 'éèẻẽẹê   e'.split('').map(toNull),
     'ê': 'ếềểễệ    e'.split('').map(toNull),
     'i': 'íìỉĩị    i'.split('').map(toNull),
@@ -35,12 +37,13 @@ function accentForTwo (buffer, key) {
     'uu': '12345', // @note
     'uy': '7'
   }
-  if (invalid[buffer] != null && invalid[buffer].indexOf(key) !== -1) return null
+  if (invalid[buffer] != null && contains(invalid[buffer], key)) return null
 
   // head, tail
   const [h, t] = buffer
-  // Edge case
-  if (buffer === 'uy' && key === '5') {
+  // Edge case of 'uo', 'uô', and 'uơ'
+  // Accents are put at the end
+  if (contains('ưu', h) && contains('oôơ', t)) {
     const accented = accentForOne(t, key)
     return accented != null ? h + accented : null
   }
@@ -63,7 +66,7 @@ function accentForThree (buffer, key) {
     'uyu': '124',
     'yêu': '5'
   }
-  if (invalid[buffer] != null && invalid[buffer].indexOf(key) !== -1) return null
+  if (invalid[buffer] != null && contains(invalid[buffer], key)) return null
 
   const accented = accentForOne(m, key)
   return accented != null ? h + accented + t : null
@@ -76,11 +79,5 @@ function transformVni (buffer, key) {
 }
 
 // const convert = vowels => '1234567890'.split('').map(key => transformVni(vowels, key))
-// const d = [
-//   'ia', 'ua', 'ưa', 'ai', 'oi', 'ôi', 'ơi', 'ui', 'ưi', 'ao', 'êu', 'eo', 'uơ',
-//   'au', 'eu', 'iu', 'uu', 'ưu', 'âu', 'ay', 'ây', 'uy'
-// ].map(convert)
-// console.log(d)
-// const t = ['iêu', 'oai', 'oay', 'uai', 'uây', 'uôi', 'ươi', 'ươu', 'uyu', 'yêu'].map(convert)
 
 module.exports = transformVni

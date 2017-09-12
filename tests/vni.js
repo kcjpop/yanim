@@ -25,5 +25,7 @@ test('transform with 2 characters', t => {
   t.equal(transformVni('ia', '9'), null)
   t.equal(transformVni('ia', '0'), 'ia')
 
+  t.equal(transformVni('uô', '5'), 'uộ')
+
   t.end()
 })
