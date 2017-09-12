@@ -34,31 +34,52 @@ function removeAccents (buffer) {
   return charMap.reduce((str, [replacer, pattern]) => str.replace(pattern, replacer), buffer)
 }
 
+function extractQuWords (str) {
+  const START_INDEX = 2
+  const normalized = removeAccents(str).substring(START_INDEX)
+  const vowelPosition = findLastVowelPosition(normalized)
+
+  if (vowelPosition == null) return null
+
+  const index2 = vowelPosition - 1
+  if (index2 > START_INDEX) {
+    const lastTwo = normalized.substr(index2, 2)
+    if (contains(DIPHTHONGS, lastTwo)) return [lastTwo, index2 + START_INDEX]
+  }
+
+  return [normalized[vowelPosition], vowelPosition + START_INDEX]
+}
+
 // Given a string, find possible substring that needs to be put accents. Cursor
 // position is assumed at the end of the string.
 // Return substring and its starting index
 //
 // String -> [String, Int]
-function extract (buffer) {
-  const normalized = removeAccents(buffer)
+function extract (str) {
+  // Edge case for "qu"
+  const isQu = str.startsWith('qu')
+  if (isQu) return extractQuWords(str)
+
+  const normalized = removeAccents(str)
 
   // Find vowel starting from the end
-  // eslint-disable-next-line
   const vowelPosition = findLastVowelPosition(normalized)
   if (vowelPosition == null) return null
 
-  if (vowelPosition - 2 >= 0) {
-    const lastThree = normalized.substr(vowelPosition - 2, 3)
-    if (contains(TRIPHTHONGS, lastThree)) return lastThree
+  const index3 = vowelPosition - 2
+  if (index3 >= 0) {
+    const lastThree = normalized.substr(index3, 3)
+    if (contains(TRIPHTHONGS, lastThree)) return [lastThree, index3]
   }
 
-  if (vowelPosition - 1 >= 0) {
-    const lastTwo = normalized.substr(vowelPosition - 1, 2)
-    if (contains(DIPHTHONGS, lastTwo)) return lastTwo
+  const index2 = vowelPosition - 1
+  if (index2 >= 0) {
+    const lastTwo = normalized.substr(index2, 2)
+    if (contains(DIPHTHONGS, lastTwo)) return [lastTwo, index2]
   }
 
-  const lastOne = buffer[vowelPosition]
-  return lastOne
+  const lastOne = str[vowelPosition]
+  return [lastOne, vowelPosition]
 }
 
 module.exports = { extract, findLastVowelPosition, removeAccents }

@@ -3,15 +3,15 @@ const { extract, findLastVowelPosition, removeAccents } = require('../src/extrac
 
 test('extract', t => {
   t.equal(extract('kh'), null)
-  t.equal(extract('khong'), 'o')
+  t.deepEqual(extract('khong'), ['o', 2])
 
-  t.equal(extract('kha'), 'a')
+  t.deepEqual(extract('kha'), ['a', 2])
 
-  t.equal(extract('dieu'), 'ieu')
-  t.equal(extract('khuyu'), 'uyu')
-  t.equal(extract('nguyên'), 'uyê')
-  t.equal(extract('âm'), 'â')
-  t.equal(extract('xuống'), 'uô')
+  t.deepEqual(extract('dieu'), ['ieu', 1])
+  t.deepEqual(extract('khuyu'), ['uyu', 2])
+  t.deepEqual(extract('nguyên'), ['uyê', 2])
+  t.deepEqual(extract('âm'), ['â', 0])
+  t.deepEqual(extract('xuống'), ['uô', 1])
 
   t.end()
 })

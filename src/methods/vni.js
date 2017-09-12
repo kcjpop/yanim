@@ -26,7 +26,7 @@ function accentForOne (char, key) {
   return keyMap[char][index === -1 ? 9 : index]
 }
 
-function accentForTwo (buffer, key) {
+function accentForTwo (str, key) {
   const invalid = {
     'ai': '67',
     'ao': '678',
@@ -37,13 +37,16 @@ function accentForTwo (buffer, key) {
     'uu': '12345', // @note
     'uy': '7'
   }
-  if (invalid[buffer] != null && contains(invalid[buffer], key)) return null
+  if (invalid[str] != null && contains(invalid[str], key)) return null
 
   // head, tail
-  const [h, t] = buffer
+  const [h, t] = str
+
   // Edge case of 'uo', 'uô', and 'uơ'
   // Accents are put at the end
   if (contains('ưu', h) && contains('oôơ', t)) {
+    if (key === '7') return 'ươ'
+
     const accented = accentForOne(t, key)
     return accented != null ? h + accented : null
   }
@@ -53,9 +56,9 @@ function accentForTwo (buffer, key) {
   return accented != null ? accented + t : null
 }
 
-function accentForThree (buffer, key) {
+function accentForThree (str, key) {
   // head, middle, tail
-  const [h, m, t] = buffer
+  const [h, m, t] = str
   const invalid = {
     'oai': '467',
     'oay': '467',
@@ -66,18 +69,26 @@ function accentForThree (buffer, key) {
     'uyu': '124',
     'yêu': '5'
   }
-  if (invalid[buffer] != null && contains(invalid[buffer], key)) return null
+  if (invalid[str] != null && contains(invalid[str], key)) return null
+
+  if (h === 'u' && m === 'y' && t !== 'u') {
+    const accented = accentForOne(t, key)
+    return accented != null ? h + m + accented : null
+  }
 
   const accented = accentForOne(m, key)
   return accented != null ? h + accented + t : null
 }
 
-function transformVni (buffer, key) {
-  if (buffer.length === 1) return accentForOne(buffer, key)
-  if (buffer.length === 2) return accentForTwo(buffer, key)
-  if (buffer.length === 3) return accentForThree(buffer, key)
-}
+// String -> String -> String
+function transformVni (str, key) {
+  const len = str.length
 
-// const convert = vowels => '1234567890'.split('').map(key => transformVni(vowels, key))
+  if (len === 1) return accentForOne(str, key)
+  if (len === 2) return accentForTwo(str, key)
+  if (len === 3) return accentForThree(str, key)
+
+  return str
+}
 
 module.exports = transformVni
