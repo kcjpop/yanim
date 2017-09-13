@@ -3,6 +3,11 @@ import { METHOD_VNI } from '../constants'
 
 const test = require('tape')
 
+test('transform', t => {
+  t.throws(() => transform('invalidmode', 'foo', '1'))
+  t.end()
+})
+
 test('transform VNI', t => {
   const inputMode = METHOD_VNI
 
@@ -25,6 +30,12 @@ test('transform VNI', t => {
   t.equal(transform(inputMode, 'luy', '5'), 'lụy')
 
   t.equal(transform(inputMode, 'quyt', '5'), 'quỵt')
+
+  t.equal(transform(inputMode, 'ONG', '6'), 'ÔNG')
+  t.equal(transform(inputMode, 'THANH', '2'), 'THÀNH')
+  t.equal(transform(inputMode, 'phO', '6'), 'phÔ')
+  t.equal(transform(inputMode, 'PHô', '1'), 'PHố')
+  t.equal(transform(inputMode, 'sƯƠng', '1'), 'sƯỚng')
 
   t.end()
 })

@@ -1,20 +1,12 @@
-import contains from './utils/contains'
+import { contains, lastIndexOf } from './utils'
 import { VOWELS, DIPHTHONGS, TRIPHTHONGS } from './constants'
 
-function lastIndexOf (str, predicate) {
-  const n = str.length
-  let i = n
-  for (; i >= 0; i--) {
-    if (predicate(str[i])) return i
-  }
-}
-
-export function findLastVowelPosition (buffer) {
+export function findLastVowelPosition(buffer) {
   return lastIndexOf(buffer.toLowerCase(), char => contains(VOWELS, char))
 }
 
 // Remove accents and only remain vowels
-export function removeAccents (buffer) {
+export function removeAccents(buffer) {
   const charMap = [
     ['a', /[áàảãạ]/gi],
     ['ă', /[ăắằẳẵặ]/gi],
@@ -33,7 +25,7 @@ export function removeAccents (buffer) {
   return charMap.reduce((str, [replacer, pattern]) => str.replace(pattern, replacer), buffer)
 }
 
-function extractQuWords (str) {
+function extractQuWords(str) {
   const START_INDEX = 2
   const normalized = removeAccents(str).substring(START_INDEX)
   const vowelPosition = findLastVowelPosition(normalized)
@@ -49,12 +41,15 @@ function extractQuWords (str) {
   return [normalized[vowelPosition], vowelPosition + START_INDEX]
 }
 
-// Given a string, find possible substring that needs to be put accents. Cursor
+// Given a lowercased string, find possible substring that needs to be put accents. Cursor
 // position is assumed at the end of the string.
 // Return substring and its starting index
 //
 // String -> [String, Int]
-export function extract (str) {
+export function extract(s) {
+  // String must be in lowercase
+  const str = s.toLowerCase()
+
   // Edge case for "qu"
   const isQu = str.startsWith('qu')
   if (isQu) return extractQuWords(str)

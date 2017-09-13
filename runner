@@ -12,7 +12,7 @@ const transform = input => rollup.rollup({
 })
   .then(bundle => bundle.generate({ format: 'iife' }))
   .then(({ code }) => code)
-  .catch(err => { throw err })
+  .catch(err => console.error(err))
 
 const files = glob.sync(process.argv[2])
 Promise.all(files.map(transform))
