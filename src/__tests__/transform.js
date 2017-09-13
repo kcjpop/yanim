@@ -1,4 +1,4 @@
-import { transform } from '../transform'
+import transform from '../transform'
 import { METHOD_VNI } from '../constants'
 
 const test = require('tape')

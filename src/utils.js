@@ -12,8 +12,8 @@ export function normalizeCase(source, target) {
   return target.split('').reduce((str, char, index) => str + (isUpper(source[index]) ? char.toUpperCase() : char), '')
 }
 
-export function lastIndexOf(str, predicate) {
-  const n = str.length
+export function lastIndexOf(str, predicate, startIndex = null) {
+  const n = startIndex != null && startIndex >= 0 && startIndex <= str.length ? startIndex : str.length
   let i = n
   for (; i >= 0; i--) if (predicate(str[i])) return i
 }

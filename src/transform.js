@@ -3,7 +3,7 @@ import { extract } from './extract'
 import transformVni from './methods/vni'
 import { normalizeCase } from './utils'
 
-export function transform(inputMode, input, key) {
+export default function transform(inputMode, input, key) {
   const transformers = {
     [METHOD_VNI]: transformVni
   }
