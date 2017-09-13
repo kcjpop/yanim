@@ -1,3 +1,3 @@
-module.exports = function (haystack, needle) {
+export default function (haystack, needle) {
   return haystack.indexOf(needle) !== -1
 }

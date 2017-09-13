@@ -7,8 +7,7 @@ import uglify from 'rollup-plugin-uglify'
 import { minify } from 'uglify-js'
 
 export default {
-  entry: 'src/index.js',
-  format: 'cjs',
+  input: 'src/index.js',
   plugins: [
     includePaths({
       paths: ['src']
@@ -28,7 +27,7 @@ export default {
       ]
       : []
   ),
-  targets: [
-    {format: 'cjs', dest: 'built/index.js'}
+  output: [
+    { format: 'umd', file: 'built/index.js', name: 'YANIM' }
   ]
 }

@@ -1,8 +1,8 @@
-const { METHOD_VNI } = require('./constants')
-const { extract } = require('./extract')
-const transformVni = require('./methods/vni')
+import { METHOD_VNI } from './constants'
+import { extract } from './extract'
+import transformVni from './methods/vni'
 
-function transform (inputMode, input, key) {
+export function transform (inputMode, input, key) {
   const transformers = {
     [METHOD_VNI]: transformVni
   }
@@ -22,5 +22,3 @@ function transform (inputMode, input, key) {
 
   return head + accented + tail
 }
-
-module.exports = { transform, transformVni }

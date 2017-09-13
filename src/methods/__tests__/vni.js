@@ -1,5 +1,5 @@
+import transformVni from '../vni'
 const test = require('tape')
-const { transformVni } = require('../src/transform')
 
 test('transform with one character', t => {
   t.equal(transformVni('a', '1'), 'á')
@@ -14,16 +14,16 @@ test('transform with one character', t => {
 })
 
 test('transform with 2 characters', t => {
-  t.equal(transformVni('ia', '1'), 'ía')
-  t.equal(transformVni('ia', '2'), 'ìa')
-  t.equal(transformVni('ia', '3'), 'ỉa')
-  t.equal(transformVni('ia', '4'), 'ĩa')
-  t.equal(transformVni('ia', '5'), 'ịa')
-  t.equal(transformVni('ia', '6'), null)
-  t.equal(transformVni('ia', '7'), null)
-  t.equal(transformVni('ia', '8'), null)
-  t.equal(transformVni('ia', '9'), null)
-  t.equal(transformVni('ia', '0'), 'ia')
+  t.equal(transformVni('ua', '1'), 'úa')
+  t.equal(transformVni('ua', '2'), 'ùa')
+  t.equal(transformVni('ua', '3'), 'ủa')
+  t.equal(transformVni('ua', '4'), 'ũa')
+  t.equal(transformVni('ua', '5'), 'ụa')
+  t.equal(transformVni('ua', '6'), null)
+  t.equal(transformVni('ua', '7'), 'ưa')
+  t.equal(transformVni('ua', '8'), null)
+  t.equal(transformVni('ua', '9'), null)
+  t.equal(transformVni('ua', '0'), 'ua')
 
   t.equal(transformVni('uô', '5'), 'uộ')
 

@@ -1,4 +1,4 @@
-const contains = require('../utils/contains')
+import contains from '../utils/contains'
 
 const toNull = char => char !== ' ' ? char : null
 
@@ -81,7 +81,7 @@ function accentForThree (str, key) {
 }
 
 // String -> String -> String
-function transformVni (str, key) {
+export default function transformVni (str, key) {
   const len = str.length
 
   if (len === 1) return accentForOne(str, key)
@@ -90,5 +90,3 @@ function transformVni (str, key) {
 
   return str
 }
-
-module.exports = transformVni

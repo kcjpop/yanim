@@ -1,5 +1,5 @@
+import { extract, findLastVowelPosition, removeAccents } from '../extract'
 const test = require('tape')
-const { extract, findLastVowelPosition, removeAccents } = require('../src/extract')
 
 test('extract', t => {
   t.equal(extract('kh'), null)

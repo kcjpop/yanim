@@ -5,3 +5,4 @@ npm-debug*
 *.crt
 *.log
 coverage/
+built/

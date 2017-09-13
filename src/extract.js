@@ -1,6 +1,5 @@
-const contains = require('./utils/contains')
-
-const { VOWELS, DIPHTHONGS, TRIPHTHONGS } = require('./constants')
+import contains from './utils/contains'
+import { VOWELS, DIPHTHONGS, TRIPHTHONGS } from './constants'
 
 function lastIndexOf (str, predicate) {
   const n = str.length
@@ -10,12 +9,12 @@ function lastIndexOf (str, predicate) {
   }
 }
 
-function findLastVowelPosition (buffer) {
+export function findLastVowelPosition (buffer) {
   return lastIndexOf(buffer.toLowerCase(), char => contains(VOWELS, char))
 }
 
 // Remove accents and only remain vowels
-function removeAccents (buffer) {
+export function removeAccents (buffer) {
   const charMap = [
     ['a', /[áàảãạ]/gi],
     ['ă', /[ăắằẳẵặ]/gi],
@@ -55,7 +54,7 @@ function extractQuWords (str) {
 // Return substring and its starting index
 //
 // String -> [String, Int]
-function extract (str) {
+export function extract (str) {
   // Edge case for "qu"
   const isQu = str.startsWith('qu')
   if (isQu) return extractQuWords(str)
@@ -81,5 +80,3 @@ function extract (str) {
   const lastOne = str[vowelPosition]
   return [lastOne, vowelPosition]
 }
-
-module.exports = { extract, findLastVowelPosition, removeAccents }

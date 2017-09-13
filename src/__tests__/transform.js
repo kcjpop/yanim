@@ -1,6 +1,7 @@
+import { transform } from '../transform'
+import { METHOD_VNI } from '../constants'
+
 const test = require('tape')
-const { transform } = require('../src/transform')
-const { METHOD_VNI } = require('../src/constants')
 
 test('transform VNI', t => {
   const inputMode = METHOD_VNI

@@ -1,12 +1,12 @@
-exports.METHOD_VNI = 'anim/VNI'
-exports.METHOD_TELEX = 'anim/TELEX'
+export const METHOD_VNI = 'anim/VNI'
+export const METHOD_TELEX = 'anim/TELEX'
 
-exports.VOWELS = 'aăâeêioôơuưy'
-exports.DIPHTHONGS = [
+export const VOWELS = 'aăâeêioôơuưy'
+export const DIPHTHONGS = [
   'ia', 'ua', 'ưa', 'ai', 'oi', 'ôi', 'ơi', 'ui', 'ưi', 'ao', 'êu', 'eo', 'uo',
   'uô', 'uơ', 'au', 'eu', 'iu', 'uu', 'ưu', 'âu', 'ay', 'ây', 'uy'
 ]
-exports.TRIPHTHONGS = [
+export const TRIPHTHONGS = [
   'ieu', 'iêu', 'oai', 'oay', 'uai', 'uay', 'uây', 'uoi', 'uôi', 'ươi', 'uou',
   'ươu', 'uye', 'uyê', 'uyu', 'yeu', 'yêu'
 ]
