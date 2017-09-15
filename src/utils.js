@@ -17,3 +17,22 @@ export function lastIndexOf(str, predicate, startIndex = null) {
   let i = n
   for (; i >= 0; i--) if (predicate(str[i])) return i
 }
+
+export function removeAccents(buffer) {
+  const charMap = [
+    ['a', /[áàảãạ]/gi],
+    ['ă', /[ăắằẳẵặ]/gi],
+    ['â', /[âấầẩẫậ]/gi],
+    ['e', /[éèẻẽẹ]/gi],
+    ['ê', /[êếềểễệ]/gi],
+    ['i', /[íìỉĩị]/gi],
+    ['o', /[óòỏõọ]/gi],
+    ['ô', /[ôốồổỗộ]/gi],
+    ['ơ', /[ơớờởỡợ]/gi],
+    ['u', /[úùủũụ]/gi],
+    ['ư', /[ưứừửữự]/gi],
+    ['y', /[ýỳỷỹỵ]/gi]
+  ]
+
+  return charMap.reduce((str, [replacer, pattern]) => str.replace(pattern, replacer), buffer)
+}

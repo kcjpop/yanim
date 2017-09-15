@@ -1,9 +1,11 @@
-import { contains } from '../utils'
+import { contains, removeAccents } from '../utils'
 
 const toNull = char => (char !== ' ' ? char : null)
 
 function accentForOne(char, key) {
   const keyMap = {
+    // @NOTE: Can write [...'hello world'] but this syntax hasn't yet supported
+    // by bublé
     //    1234567890
     a: 'áàảãạâ ă a'.split('').map(toNull),
     ă: 'ắằẳẵặâ   a'.split('').map(toNull),
@@ -20,10 +22,12 @@ function accentForOne(char, key) {
     d: '        đd'.split('').map(toNull)
   }
 
-  if (keyMap[char] == null) return char
+  const vowel = removeAccents(char)
+  const map = keyMap[char] || keyMap[vowel]
+  if (map == null) return char
 
   const index = parseInt(key, 10) - 1
-  return keyMap[char][index === -1 ? 9 : index]
+  return map[index === -1 ? 9 : index]
 }
 
 function accentForTwo(str, key) {

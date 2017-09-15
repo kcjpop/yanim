@@ -17,6 +17,7 @@ export default function transform(inputMode, input, key) {
 
   const [buffer, startingIndex] = result
   const accented = transformers[inputMode](buffer, String(key))
+  if (accented == null) return input + key
 
   // Normalize case of accented substring
   const cased = normalizeCase(input.substr(startingIndex, accented.length), accented)

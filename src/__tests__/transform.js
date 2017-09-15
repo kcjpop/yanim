@@ -37,5 +37,16 @@ test('transform VNI', t => {
   t.equal(transform(inputMode, 'PHô', '1'), 'PHố')
   t.equal(transform(inputMode, 'sƯƠng', '1'), 'sƯỚng')
 
+  t.equal(transform(inputMode, 'một', '1'), 'mốt')
+  t.equal(transform(inputMode, 'một', '2'), 'mồt')
+  t.equal(transform(inputMode, 'một', '3'), 'mổt')
+  t.equal(transform(inputMode, 'một', '4'), 'mỗt')
+  t.equal(transform(inputMode, 'một', '5'), 'môt5')
+  t.equal(transform(inputMode, 'một', '6'), 'mọt6')
+  t.equal(transform(inputMode, 'một', '7'), 'mợt')
+  t.equal(transform(inputMode, 'một', '8'), 'một8')
+  t.equal(transform(inputMode, 'một', '9'), 'một9')
+  t.equal(transform(inputMode, 'một', '0'), 'mot')
+
   t.end()
 })

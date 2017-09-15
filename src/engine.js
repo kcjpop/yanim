@@ -40,6 +40,6 @@ export function putAccent(input, keyCode, cursorPosition) {
 //
 // String -> String -> String -> String
 export default function(doc, win) {
-  // if (!win.getSelection)
-  //   throw new Error('Your browser does not support `window.getSelection` function, which YANIM deeply depends on.')
+  if (!win.getSelection)
+    throw new Error('Your browser does not support `window.getSelection` function, which YANIM deeply depends on.')
 }

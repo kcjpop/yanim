@@ -9,10 +9,7 @@
   },
   "watch": {
     "test": {
-      "patterns": [
-        "src",
-        "tests"
-      ],
+      "patterns": ["src", "tests"],
       "extensions": "js",
       "quiet": true
     }
