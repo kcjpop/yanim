@@ -1,22 +1,19 @@
-// Engine will hook into the page, listen to keypress event on applicable elements
-// and put accents to their value/textContent accordingly
 import { lastIndexOf } from './utils'
 import { METHOD_VNI } from './constants'
 import transform from './transform'
 
-export function extractBuffer(str, cursorPosition) {
-  // Cursor at the end
+export function extractBuffer (str, cursorPosition) {
+  // Cursor position can be at the end of the word
   //      lorem ipsum|
   //
-  // Cursor in the middle of word
+  // Or in the middle
   //      lorem ips|um
   //
-  // Different stop characters
+  // Beside normal whitespaces, there are also other stop characters
   //     lorem ips^sum
   //     lorem ips91sum
   //     lorem ips---sum
-  const len = str.length
-  const stopPattern = /\s+|[-{}!@#$%^&*()_+=\[\]|\\:";\'<>?,./~`\r\n\t]/i
+  const stopPattern = /\s+|[-{}!@#$%^&*()_+=[\]|\\:";'<>?,./~`\r\n\t]/i
 
   const index = lastIndexOf(str, c => stopPattern.test(c), cursorPosition)
   const pos = index >= 0 ? index : -1
@@ -24,22 +21,21 @@ export function extractBuffer(str, cursorPosition) {
   return [str.substring(pos + 1, cursorPosition + 1), pos + 1]
 }
 
-export function putAccent(input, keyCode, cursorPosition) {
-  const [buffer, index] = extractBuffer(input, cursorPosition)
-  if (!buffer || buffer.length === 0) return input
-
-  const accented = transform(METHOD_VNI, buffer, keyCode)
-  return input.substring(0, index) + accented + input.substring(index + accented.length)
-}
-
-// Take raw input string from user, entered keycode and an option object.
-// Raw input string could be `HTMLInputElement.value`, `HTMLTextareaElement`
-// or `Element.textContent`.
-//
+// Receive a raw string input, current key code and cursor position
 // Return accented string if applicable
 //
 // String -> String -> String -> String
-export default function(doc, win) {
-  if (!win.getSelection)
-    throw new Error('Your browser does not support `window.getSelection` function, which YANIM deeply depends on.')
+export function putAccent (input, keyCode, cursorPosition) {
+  // Find the buffer that can be put accents
+  const [buffer, index] = extractBuffer(input, cursorPosition)
+  if (!buffer || buffer.length === 0) return input
+
+  // Put accents into buffer
+  const accented = transform(METHOD_VNI, buffer, keyCode)
+
+  // Return the original raw input with accented buffer replaced
+  return input.substring(0, index) + accented + input.substring(index + accented.length)
 }
+
+const Engine = putAccent
+export default Engine

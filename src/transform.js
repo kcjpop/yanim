@@ -1,29 +1,35 @@
 import { METHOD_VNI } from './constants'
-import { extract } from './extract'
+import { extractPossibleVowels } from './extract'
 import transformVni from './methods/vni'
 import { normalizeCase } from './utils'
 
-export default function transform(inputMode, input, key) {
+export default function transform (inputMode, buffer, keyCode) {
   const transformers = {
     [METHOD_VNI]: transformVni
+    // [METHOD_TELEX]: transformTelex
   }
 
-  if (transformers[inputMode] == null) {
+  const putAccents = transformers[inputMode]
+
+  if (putAccents == null) {
     throw new Error('Invalid input mode. Supported: ' + Object.keys(transformers).join(''))
   }
 
-  const result = extract(input)
-  if (result == null) return input
+  const result = extractPossibleVowels(buffer)
+  if (result == null) return buffer
 
-  const [buffer, startingIndex] = result
-  const accented = transformers[inputMode](buffer, String(key))
-  if (accented == null) return input + key
+  // Put accents for the found vowel combination
+  const [vowels, startingIndex] = result
+  const accented = putAccents(vowels, String(keyCode))
+  // If cannot put accents for the vowels, just append key code into it
+  if (accented == null) return buffer + keyCode
 
-  // Normalize case of accented substring
-  const cased = normalizeCase(input.substr(startingIndex, accented.length), accented)
+  // Because `extractPossibleVowels()` will always return string in lower case,
+  // we need to restore its original case
+  const cased = normalizeCase(buffer.substr(startingIndex, accented.length), accented)
 
-  const head = input.substring(0, startingIndex)
-  const tail = input.substring(startingIndex + accented.length)
+  const head = buffer.substring(0, startingIndex)
+  const tail = buffer.substring(startingIndex + accented.length)
 
   return head + cased + tail
 }

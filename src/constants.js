@@ -48,3 +48,6 @@ export const TRIPHTHONGS = [
   'yeu',
   'yêu'
 ]
+
+export const DIPHTHONG_LENGTH = 2
+export const TRIPHTHONG_LENGTH = 3

@@ -1,18 +1,18 @@
-import { extract, findLastVowelPosition } from '../extract'
+import { extractPossibleVowels, findLastVowelPosition } from '../extract'
 const test = require('tape')
 
-test('extract', t => {
-  t.equal(extract('kh'), null)
-  t.deepEqual(extract('khong'), ['o', 2])
+test('extractPossibleVowels', t => {
+  t.equal(extractPossibleVowels('kh'), null)
+  t.deepEqual(extractPossibleVowels('khong'), ['o', 2])
 
-  t.deepEqual(extract('kha'), ['a', 2])
-  t.deepEqual(extract('một'), ['ộ', 1])
+  t.deepEqual(extractPossibleVowels('kha'), ['a', 2])
+  t.deepEqual(extractPossibleVowels('một'), ['ộ', 1])
 
-  t.deepEqual(extract('dieu'), ['ieu', 1])
-  t.deepEqual(extract('khuyu'), ['uyu', 2])
-  t.deepEqual(extract('nguyên'), ['uyê', 2])
-  t.deepEqual(extract('âm'), ['â', 0])
-  t.deepEqual(extract('xuống'), ['uố', 1])
+  t.deepEqual(extractPossibleVowels('dieu'), ['ieu', 1])
+  t.deepEqual(extractPossibleVowels('khuyu'), ['uyu', 2])
+  t.deepEqual(extractPossibleVowels('nguyên'), ['uyê', 2])
+  t.deepEqual(extractPossibleVowels('âm'), ['â', 0])
+  t.deepEqual(extractPossibleVowels('xuống'), ['uố', 1])
 
   t.end()
 })
@@ -31,4 +31,3 @@ test('findLastVowelPosition', t => {
   t.deepEqual(findLastVowelPosition('PHƠN'), 2)
   t.end()
 })
-
