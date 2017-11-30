@@ -1,18 +1,19 @@
 const { ACCENTED_VOWELS } = require('../constants')
 
-exports.otherOfAPair = (k, [a, b]) => k === a ? b : a
+exports.otherOfAPair = (k, [a, b]) => (k === a ? b : a)
 
-function lastIndexOf (str, predicate, startIndex = null) {
+function lastIndexOf(str, predicate, startIndex = null) {
   const n = startIndex != null && startIndex >= 0 && startIndex <= str.length ? startIndex : str.length
   let i = n
   for (; i >= 0; i--) if (predicate(str[i])) return i
 }
 exports.lastIndexOf = lastIndexOf
 
-exports.findLastVowelPosition = buffer =>
-  lastIndexOf(buffer.toLowerCase(), char => ACCENTED_VOWELS.includes(char))
+exports.isMetaKey = keyCode => !/^[a-zA-Z0-9]$/gi.test(keyCode)
 
-function removeMarks (buffer) {
+exports.findLastVowelPosition = buffer => lastIndexOf(buffer.toLowerCase(), char => ACCENTED_VOWELS.includes(char))
+
+function removeMarks(buffer) {
   const charMap = [
     ['a', /[áàảãạ]/gi],
     ['ă', /[ăắằẳẵặ]/gi],

@@ -14,7 +14,9 @@ describe('Engine', () => {
       ['duoi', '9', 'đuoi'],
       ['đuoi', '7', 'đươi'],
       ['đươi', '2', 'đười'],
-      ['p', '6', 'p6']
+      ['p', '6', 'p6'],
+      ['tie', '6', 'tiê'],
+      ['tiê', '1', 'tiế']
     ]
 
     const en = Engine({ inputMethod: 'VNI' })
