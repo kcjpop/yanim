@@ -75,4 +75,63 @@ const ACCENT_INPUT_MAP = Object.keys(ACCENT_MAP).reduce((acc, k) => {
   return acc
 }, {})
 
-module.exports = { ACCENT_INPUT_MAP }
+const ACCENTED_VOWELS = 'aáàảãạăắằẳẵặâấầẩẫậeéèẻẽẹêếềểễệiíìỉĩịoóòỏõọôốồổỗộơớờởỡợuúùủũụưứừửữựyýỳỷỹỵ'
+
+const DIPHTHONG_LENGTH = 2
+
+const TRIPHTHONG_LENGTH = 3
+
+const DIPHTHONGS = [
+  'ia',
+  'ua',
+  'ưa',
+  'ai',
+  'oi',
+  'ôi',
+  'ơi',
+  'ui',
+  'ưi',
+  'ao',
+  'êu',
+  'eo',
+  'uo',
+  'uô',
+  'uơ',
+  'au',
+  'eu',
+  'iu',
+  'uu',
+  'ưu',
+  'âu',
+  'ay',
+  'ây',
+  'uy'
+]
+const TRIPHTHONGS = [
+  'ieu',
+  'iêu',
+  'oai',
+  'oay',
+  'uai',
+  'uay',
+  'uây',
+  'uoi',
+  'uôi',
+  'ươi',
+  'uou',
+  'ươu',
+  'uye',
+  'uyê',
+  'uyu',
+  'yeu',
+  'yêu'
+]
+
+module.exports = {
+  ACCENT_INPUT_MAP,
+  ACCENTED_VOWELS,
+  DIPHTHONG_LENGTH,
+  DIPHTHONGS,
+  TRIPHTHONG_LENGTH,
+  TRIPHTHONGS
+}

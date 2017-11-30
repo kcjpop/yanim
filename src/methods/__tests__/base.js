@@ -17,6 +17,11 @@ describe('To put accents for one vowel', () => {
       ['ă', '3', 'ẳ'],
       ['ă', '4', 'ẵ'],
       ['ă', '5', 'ặ'],
+      ['ắ', '1', ['ă']],
+      ['ắ', '2', 'ằ'],
+      ['ắ', '3', 'ẳ'],
+      ['ắ', '4', 'ẵ'],
+      ['ắ', '5', 'ặ'],
       ['i', '1', 'í'],
       ['i', '2', 'ì'],
       ['i', '3', 'ỉ'],
@@ -50,7 +55,7 @@ describe('To put accents for one vowel', () => {
     ]
 
     cases.forEach(([vowel, keyCode, expected]) =>
-      expect(accentForOne(vowel, keyCode)).toBe(expected))
+      expect(accentForOne(vowel, keyCode)).toEqual(expected))
   })
 
   it('should swap accents in cases of A and O', () => {

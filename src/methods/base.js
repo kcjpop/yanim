@@ -1,4 +1,4 @@
-const { otherOfAPair } = require('../utils')
+const { otherOfAPair, removeMarks } = require('../utils')
 const { ACCENT_INPUT_MAP } = require('../constants')
 
 /**
@@ -40,13 +40,22 @@ function accentForOne (char, k) {
     return ACCENT_INPUT_MAP[newCom]
   }
 
-  // To put accents for non-root vowels
-  const newKeys = [
-    ...keys.includes(key) ? keys.filter(k => k !== key) : keys,
-    key
-  ].sort()
+  // Undo putting accents on vowel, e.g. ắ [a, 1, 8] + 8 = á [a, 1]
+  // Return an array containing vowel with mark/accent removed
+  if (keys.includes(key)) {
+    const newCom = [vowel, ...keys.filter(k => k !== key).sort()].join('')
 
-  const newCom = [vowel, ...newKeys].join('')
+    return [ACCENT_INPUT_MAP[newCom] || vowel]
+  }
+
+  const MARKS = ['1', '2', '3', '4', '5']
+  const [firstKey] = keys
+  // If we are changing marks, e.g. ắ [a, 1, 8] + 2 = ằ [a, 2, 8]
+  const newKeys = MARKS.includes(firstKey) && MARKS.includes(key)
+    ? keys.map(k => k === firstKey ? key : k)
+    : [...keys, key] // @NOTE: Maybe this will never happen
+
+  const newCom = [vowel, ...newKeys.sort()].join('')
   return ACCENT_INPUT_MAP[newCom] || false
 }
 
@@ -58,6 +67,8 @@ function accentForOne (char, k) {
  * @return {String|Boolean}
  */
 function accentForTwo (str, key) {
+  const rootVowels = removeMarks(str)
+
   // A map of invalid keys that cannot be applied on dipthongs
   const invalidKeys = {
     ai: '67',
@@ -69,18 +80,22 @@ function accentForTwo (str, key) {
     uu: '12345', // @note
     uy: '7'
   }
-  if (invalidKeys[str] != null && invalidKeys[str].includes(key)) return false
+  if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key)) return false
 
   // Split the dipthong into head and tail
   const [h, t] = str
 
   // Edge cases of 'uo', 'uô', and 'uơ'
   // Accents are put at the tail vowel
-  if (str.match(/[ưu][oôơ]/i)) {
+  if ((/[ưu][oôơ]/i).test(rootVowels)) {
     if (key === '7') return 'ươ'
-
     const accented = accentForOne(t, key)
-    return accented !== false ? h + accented : false
+
+    return Array.isArray(accented)
+      ? [h + accented[0]]
+      : accented !== false
+        ? h + accented
+        : false
   }
 
   const accented = accentForOne(h, key)
