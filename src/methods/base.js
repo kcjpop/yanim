@@ -9,7 +9,7 @@ const { ACCENT_INPUT_MAP, VowelResult } = require('../constants')
  * @return {String|Boolean} Return accented vowel, or false
  */
 function accentForOne(char, k) {
-  const key = String(k)
+  const keyCode = String(k)
 
   // First case, char is a vowel without accents, e.g. a e i o u
   // Let's call them root vowels, others are non-root
@@ -19,21 +19,30 @@ function accentForOne(char, k) {
   // If not, return false
 
   if (!combination) {
-    return ACCENT_INPUT_MAP[char + key] ? VowelResult.Accented(ACCENT_INPUT_MAP[char + key]) : VowelResult.None
+    return ACCENT_INPUT_MAP[char + keyCode] ? VowelResult.Accented(ACCENT_INPUT_MAP[char + keyCode]) : VowelResult.None
   }
 
   // Next case, non-root vowels
   // Destruct them into root vowel and key combination
   const [vowel, ...keys] = combination
+  const MARKS = ['1', '2', '3', '4', '5']
+  const [firstKey] = keys
+
+  // Put hat/horn for vowels having tone mark already
+  // E.g. á + 8 = ắ, ó + 6 = ố
+  if (keys.length === 1 && MARKS.includes(firstKey) && ['6', '8', '7'].includes(keyCode)) {
+    const newCom = [vowel, ...[...keys, keyCode].sort()].join('')
+    return ACCENT_INPUT_MAP[newCom] ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom]) : VowelResult.None
+  }
 
   // Edge case for Ă <=> Â and Ơ <=> Ô when they can be interchangeable
   const SWAPPABLE_KEYS = { a: ['6', '8'], o: ['6', '7'] }
-  if (!keys.includes(key) && SWAPPABLE_KEYS[vowel] && SWAPPABLE_KEYS[vowel].includes(key)) {
+  if (!keys.includes(keyCode) && SWAPPABLE_KEYS[vowel] && SWAPPABLE_KEYS[vowel].includes(keyCode)) {
     // For example, â = [a, 6]. Replace 6 with 8 to have [a, 8] = ă
     // Work with other accent marks as well
     // ẳ = [a, 3, 8] changes to [a, 3, 6] = ẩ
-    const otherKey = otherOfAPair(key, SWAPPABLE_KEYS[vowel])
-    const newKeys = keys.map(k => (k === otherKey ? key : k)).sort()
+    const otherKey = otherOfAPair(keyCode, SWAPPABLE_KEYS[vowel])
+    const newKeys = keys.map(k => (k === otherKey ? keyCode : k)).sort()
     const newCom = [vowel, ...newKeys].join('')
 
     return VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
@@ -41,17 +50,17 @@ function accentForOne(char, k) {
 
   // Undo putting accents on vowel, e.g. ắ [a, 1, 8] + 8 = á [a, 1]
   // Return an array containing vowel with mark/accent removed
-  if (keys.includes(key)) {
-    const newCom = [vowel, ...keys.filter(k => k !== key).sort()].join('')
+  if (keys.includes(keyCode)) {
+    const newCom = [vowel, ...keys.filter(k => k !== keyCode).sort()].join('')
 
     return VowelResult.Undone(ACCENT_INPUT_MAP[newCom] || vowel)
   }
 
-  const MARKS = ['1', '2', '3', '4', '5']
-  const [firstKey] = keys
   // If we are changing marks, e.g. ắ [a, 1, 8] + 2 = ằ [a, 2, 8]
   const newKeys =
-    MARKS.includes(firstKey) && MARKS.includes(key) ? keys.map(k => (k === firstKey ? key : k)) : [...keys, key] // @NOTE: Maybe this will never happen
+    MARKS.includes(firstKey) && MARKS.includes(keyCode)
+      ? keys.map(k => (k === firstKey ? keyCode : k))
+      : [...keys, keyCode] // @NOTE: Maybe this will never happen
 
   const newCom = [vowel, ...newKeys.sort()].join('')
   return ACCENT_INPUT_MAP[newCom] ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom]) : VowelResult.None
