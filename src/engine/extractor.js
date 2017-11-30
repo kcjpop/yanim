@@ -1,44 +1,47 @@
-import { contains, lastIndexOf, removeAccents } from './utils'
-import {
-  ACCENTED_VOWELS, DIPHTHONGS, TRIPHTHONGS, TRIPHTHONG_LENGTH, DIPHTHONG_LENGTH
-} from './constants'
+const { findLastVowelPosition, removeMarks } = require('../utils')
+const {
+  DIPHTHONG_LENGTH,
+  TRIPHTHONG_LENGTH,
+  TRIPHTHONGS,
+  DIPHTHONGS
+} = require('../constants')
 
-export function findLastVowelPosition (buffer) {
-  return lastIndexOf(buffer.toLowerCase(), char => contains(ACCENTED_VOWELS, char))
-}
-
-function extractQuWords (str) {
+function extractQuWords(s) {
   const START_INDEX = 2
-  const normalized = removeAccents(str).substring(START_INDEX)
-  const vowelPosition = findLastVowelPosition(normalized)
+  const str = s.substr(START_INDEX)
+  const vowelPosition = findLastVowelPosition(str)
 
   if (vowelPosition == null) return null
 
   const index2 = vowelPosition - 1
   if (index2 > START_INDEX) {
-    const lastTwo = normalized.substr(index2, 2)
+    const lastTwo = str.substr(index2, 2)
     if (contains(DIPHTHONGS, lastTwo)) return [lastTwo, index2 + START_INDEX]
   }
 
-  return [normalized[vowelPosition], vowelPosition + START_INDEX]
+  return [str[vowelPosition], vowelPosition + START_INDEX]
 }
 
-// Given a lowercased string, find possible vowels, dipthongs or triphthongs
+// Given a string, find possible vowels, dipthongs or triphthongs
 // that needs to be put accents on. For example,
 //  "khong" => "o"
 //  "xuống" => "uố"
 //  "nguyên" => "uyê"
 //
 // Cursor position is assumed at the end of the string.
-// Return substring and its starting index
+// Return substring and combination starting index
 //
 // String -> [String, Int]
-export function extractPossibleVowels (s) {
+function findVowelCombination(s) {
+  // Change to lowercase so we don't need to operate on both lower and uppercase
+  // characters
   const str = s.toLowerCase()
 
-  // Edge case for "qu"
-  const isQu = str.startsWith('qu')
-  if (isQu) return extractQuWords(str)
+  // Edge case: 'd' is a possible letter to put accent on
+  if (str.startsWith('d')) return ['d', 0]
+
+  // Edge case: words starting with 'qu'
+  if (str.startsWith('qu')) return extractQuWords(str)
 
   // First, find vowel starting from the end
   const vowelPosition = findLastVowelPosition(str)
@@ -49,17 +52,20 @@ export function extractPossibleVowels (s) {
   const indexTripth = vowelPosition - TRIPHTHONG_LENGTH + 1
   if (indexTripth >= 0) {
     const lastThree = str.substr(indexTripth, TRIPHTHONG_LENGTH)
-    if (contains(TRIPHTHONGS, removeAccents(lastThree))) return [lastThree, indexTripth]
+    if (TRIPHTHONGS.includes(removeMarks(lastThree)))
+      return [lastThree, indexTripth]
   }
 
   // Not a triphthong, let's check if it's a diphthong
   const indexDiph = vowelPosition - DIPHTHONG_LENGTH + 1
   if (indexDiph >= 0) {
     const lastTwo = str.substr(indexDiph, DIPHTHONG_LENGTH)
-    if (contains(DIPHTHONGS, removeAccents(lastTwo))) return [lastTwo, indexDiph]
+    if (DIPHTHONGS.includes(removeMarks(lastTwo))) return [lastTwo, indexDiph]
   }
 
   // Not a diphthong either, so it's the first case, just vowel
   const lastOne = str[vowelPosition]
   return [lastOne, vowelPosition]
 }
+
+module.exports = { findVowelCombination }

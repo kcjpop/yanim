@@ -1,2 +1,3 @@
-export { default as Engine } from './engine'
-export { default as Listener } from './listener'
+const Engine = require('./engine')
+
+module.exports = { Engine }
