@@ -21,4 +21,20 @@ describe('Engine', () => {
 
     cases.forEach(([str, key, expected]) => expect(en.transform(str, key)).toBe(expected))
   })
+
+  it('should keep cases the same', () => {
+    const cases = [
+      ['XUỐNG', '2', 'XUỒNG'],
+      ['nguyên', '4', 'nguyễn'],
+      ['nGUYỄn', '5', 'nGUYỆn'],
+      ['duOi', '9', 'đuOi'],
+      ['ĐUoi', '7', 'ĐƯơi'],
+      ['đƯƠi', '2', 'đƯỜi'],
+      ['P', '6', 'P6']
+    ]
+
+    const en = Engine({ inputMethod: 'VNI' })
+
+    cases.forEach(([str, key, expected]) => expect(en.transform(str, key)).toBe(expected))
+  })
 })
