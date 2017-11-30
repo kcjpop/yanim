@@ -1,5 +1,5 @@
 const { otherOfAPair, removeMarks } = require('../utils')
-const { ACCENT_INPUT_MAP } = require('../constants')
+const { ACCENT_INPUT_MAP, VowelResult } = require('../constants')
 
 /**
  * Put accents for a single vowel
@@ -17,7 +17,11 @@ function accentForOne (char, k) {
 
   // Try to put accent for it, e.g. a + 1 = á
   // If not, return false
-  if (!combination) return ACCENT_INPUT_MAP[char + key] || false
+  if (!combination) {
+    return ACCENT_INPUT_MAP[char + key]
+      ? VowelResult.Accented(ACCENT_INPUT_MAP[char + key])
+      : VowelResult.None
+  }
 
   // Next case, non-root vowels
   // Destruct them into root vowel and key combination
@@ -37,7 +41,7 @@ function accentForOne (char, k) {
     const newKeys = keys.map(k => (k === otherKey ? key : k)).sort()
     const newCom = [vowel, ...newKeys].join('')
 
-    return ACCENT_INPUT_MAP[newCom]
+    return VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
   }
 
   // Undo putting accents on vowel, e.g. ắ [a, 1, 8] + 8 = á [a, 1]
@@ -45,7 +49,7 @@ function accentForOne (char, k) {
   if (keys.includes(key)) {
     const newCom = [vowel, ...keys.filter(k => k !== key).sort()].join('')
 
-    return [ACCENT_INPUT_MAP[newCom] || vowel]
+    return VowelResult.Undone(ACCENT_INPUT_MAP[newCom] || vowel)
   }
 
   const MARKS = ['1', '2', '3', '4', '5']
@@ -56,7 +60,9 @@ function accentForOne (char, k) {
     : [...keys, key] // @NOTE: Maybe this will never happen
 
   const newCom = [vowel, ...newKeys.sort()].join('')
-  return ACCENT_INPUT_MAP[newCom] || false
+  return ACCENT_INPUT_MAP[newCom]
+    ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
+    : VowelResult.None
 }
 
 /**
@@ -80,7 +86,7 @@ function accentForTwo (str, key) {
     uu: '12345', // @note
     uy: '7'
   }
-  if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key)) return false
+  if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key)) return VowelResult.None
 
   // Split the dipthong into head and tail
   const [h, t] = str
@@ -89,17 +95,19 @@ function accentForTwo (str, key) {
   // Accents are put at the tail vowel
   if ((/[ưu][oôơ]/i).test(rootVowels)) {
     if (key === '7') return 'ươ'
-    const accented = accentForOne(t, key)
 
-    return Array.isArray(accented)
-      ? [h + accented[0]]
-      : accented !== false
-        ? h + accented
-        : false
+    return accentForOne(t, key).cata({
+      Accented: result => VowelResult.Accented(h + result),
+      Undone: result => VowelResult.Undone(h + result),
+      None: () => this
+    })
   }
 
-  const accented = accentForOne(h, key)
-  return accented !== false ? accented + t : false
+  return accentForOne(h, key).cata({
+    Accented: result => VowelResult.Accented(result + t),
+    Undone: result => VowelResult.Undone(result + t),
+    None: () => this
+  })
 }
 
 function accentForThree (str, key) {
@@ -115,17 +123,23 @@ function accentForThree (str, key) {
     uyu: '124',
     yêu: '45'
   }
-  if (invalid[str] != null && invalid[str].includes(key)) return false
+  if (invalid[str] != null && invalid[str].includes(key)) return VowelResult.None
 
   // Edge case to put accent for tail vowel
   if (h === 'u' && m === 'y' && t !== 'u') {
-    const accented = accentForOne(t, key)
-    return accented !== false ? h + m + accented : false
+    return accentForOne(t, key).cata({
+      Accented: result => VowelResult.Accented(h + m + result),
+      Undone: result => VowelResult.Undone(h + m + result),
+      None: () => this
+    })
   }
 
   // Accents are put in the middle
-  const accented = accentForOne(m, key)
-  return accented !== false ? h + accented + t : false
+  return accentForOne(m, key).cata({
+    Accented: result => VowelResult.Accented(h + result + t),
+    Undone: result => VowelResult.Undone(h + result + t),
+    None: () => this
+  })
 }
 
 function transform (str, key) {

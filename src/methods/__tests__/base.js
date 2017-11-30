@@ -1,6 +1,6 @@
 /* global describe, it, expect */
-
 const { accentForOne, accentForTwo, accentForThree, transform } = require('../base')
+const { VowelResult } = require('../../constants')
 
 describe('To put accents for one vowel', () => {
   it('should work', () => {
@@ -17,7 +17,6 @@ describe('To put accents for one vowel', () => {
       ['ă', '3', 'ẳ'],
       ['ă', '4', 'ẵ'],
       ['ă', '5', 'ặ'],
-      ['ắ', '1', ['ă']],
       ['ắ', '2', 'ằ'],
       ['ắ', '3', 'ẳ'],
       ['ắ', '4', 'ẵ'],
@@ -54,8 +53,12 @@ describe('To put accents for one vowel', () => {
       ['d', '9', 'đ']
     ]
 
-    cases.forEach(([vowel, keyCode, expected]) =>
-      expect(accentForOne(vowel, keyCode)).toEqual(expected))
+    cases.forEach(([vowel, keyCode, result]) =>
+      expect(accentForOne(vowel, keyCode)).toEqual({ result }))
+
+    // const undone = [
+    //   ['ắ', '1', VowelResult.Undone('ă')]
+    // ]
   })
 
   it('should swap accents in cases of A and O', () => {
@@ -69,27 +72,27 @@ describe('To put accents for one vowel', () => {
       ['ộ', '7', 'ợ']
     ]
 
-    cases.forEach(([vowel, keyCode, expected]) =>
-      expect(accentForOne(vowel, keyCode)).toBe(expected))
+    cases.forEach(([vowel, keyCode, result]) =>
+      expect(accentForOne(vowel, keyCode)).toEqual({ result }))
   })
 
   it('should detect invalid combination', () => {
     const cases = [
-      ['a', '9', false],
-      ['ă', '7', false],
-      ['ă', '9', false],
-      ['e', '7', false],
-      ['e', '8', false],
-      ['u', '6', false],
-      ['u', '8', false],
-      ['i', '6', false],
-      ['i', '7', false],
-      ['i', '8', false],
-      ['p', '9', false]
+      ['a', '9'],
+      ['ă', '7'],
+      ['ă', '9'],
+      ['e', '7'],
+      ['e', '8'],
+      ['u', '6'],
+      ['u', '8'],
+      ['i', '6'],
+      ['i', '7'],
+      ['i', '8'],
+      ['p', '9']
     ]
 
     cases.forEach(([vowel, keyCode, expected]) =>
-      expect(accentForOne(vowel, keyCode)).toBe(expected))
+      expect(VowelResult.None.is(accentForOne(vowel, keyCode))).toBe(true))
   })
 })
 
@@ -105,8 +108,8 @@ describe('To put accents for dipthongs', () => {
       ['uô', '3', 'uổ']
     ]
 
-    cases.forEach(([dipthongs, keyCode, expected]) =>
-      expect(accentForTwo(dipthongs, keyCode)).toBe(expected))
+    cases.forEach(([dipthongs, keyCode, result]) =>
+      expect(accentForTwo(dipthongs, keyCode)).toEqual({result}))
   })
 })
 
@@ -115,16 +118,21 @@ describe('To put accents for triphthongs', () => {
     const cases = [
       ['yêu', '1', 'yếu'],
       ['yêu', '2', 'yều'],
-      ['yêu', '3', 'yểu'],
-      ['yêu', '4', false],
-      ['yêu', '5', false]
+      ['yêu', '3', 'yểu']
       // @TODO: Edge cases. Should be handled
       // ['ươi', '6', 'uôi'],
       // ['uôi', '7', 'ươi']
     ]
 
-    cases.forEach(([triphthongs, keyCode, expected]) =>
-      expect(accentForThree(triphthongs, keyCode)).toBe(expected))
+    cases.forEach(([triphthongs, keyCode, result]) =>
+      expect(accentForThree(triphthongs, keyCode)).toEqual({result}))
+
+    const invalid = [
+      ['yêu', '4'],
+      ['yêu', '5']
+    ]
+    invalid.forEach(([triphthongs, keyCode, result]) =>
+      expect(VowelResult.None.is(accentForThree(triphthongs, keyCode))).toBe(true))
   })
 })
 
@@ -136,7 +144,7 @@ describe('To put accents based on string length', () => {
       ['yêu', '3', 'yểu']
     ]
 
-    cases.forEach(([triphthongs, keyCode, expected]) =>
-      expect(transform(triphthongs, keyCode)).toBe(expected))
+    cases.forEach(([triphthongs, keyCode, result]) =>
+      expect(transform(triphthongs, keyCode)).toEqual({ result }))
   })
 })
