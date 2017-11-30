@@ -123,15 +123,19 @@ describe('To put accents for triphthongs', () => {
     const cases = [
       ['yêu', '1', 'yếu'],
       ['yêu', '2', 'yều'],
-      ['yêu', '3', 'yểu']
-      // @TODO: Edge cases. Should be handled
-      // ['ươi', '6', 'uôi'],
-      // ['uôi', '7', 'ươi']
+      ['yêu', '3', 'yểu'],
+      ['ươi', '6', 'uôi'],
+      ['uôi', '7', 'ươi'],
+      ['uyê', '1', 'uyế'],
+      ['uyê', '2', 'uyề'],
+      ['uyê', '3', 'uyể'],
+      ['uyê', '4', 'uyễ'],
+      ['uyê', '5', 'uyệ']
     ]
 
     cases.forEach(([triphthongs, keyCode, result]) => expect(accentForThree(triphthongs, keyCode)).toEqual({ result }))
 
-    const invalid = [['yêu', '4'], ['yêu', '5']]
+    const invalid = [['uyu', '1'], ['uyu', '2'], ['yêu', '5']]
     invalid.forEach(([triphthongs, keyCode, result]) =>
       expect(VowelResult.None.is(accentForThree(triphthongs, keyCode))).toBe(true)
     )

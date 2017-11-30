@@ -107,19 +107,16 @@ function accentForThree(str, key) {
   // head, middle, tail
   const [h, m, t] = str
   const invalid = {
-    oai: '467',
-    oay: '467',
-    uai: '467',
-    uôi: '47',
-    ươi: '46',
-    ươu: '46',
-    uyu: '124',
-    yêu: '45'
+    oai: '67',
+    oay: '67',
+    uai: '67',
+    uyu: '12',
+    yêu: '5'
   }
   if (invalid[str] != null && invalid[str].includes(key)) return VowelResult.None
 
-  // Edge case to put accent on tail vowel
-  if (h === 'u' && m === 'y' && t !== 'u') {
+  // For UYE, and UYÊ, accent is put in the last vowel
+  if (/uy[eê]/gi.test(rootVowels)) {
     return accentForOne(t, key).cata({
       Accented: result => VowelResult.Accented(h + m + result),
       Undone: result => VowelResult.Undone(h + m + result),
@@ -127,15 +124,18 @@ function accentForThree(str, key) {
     })
   }
 
-  if (/[uư][oôơ]/gi.test(rootVowels) && key === '7') {
+  // For UOI, UÔI, ƯƠI, UOU, and ƯƠU, they can switch between horn and hat mark
+  if (/[uư][oôơ]/gi.test(rootVowels)) {
     return accentForOne(m, key).cata({
-      Accented: result => VowelResult.Accented('ư' + result + t),
+      // This is a hack, try to understand it by yourself.
+      // Examples: ươi + 6, uôi + 7
+      Accented: result => VowelResult.Accented((key === '6' ? 'u' : 'ư') + result + t),
       Undone: result => VowelResult.Undone('u' + result + t),
       None: () => this
     })
   }
 
-  // Accents are put in the middle
+  // For other dipthongs, accent is put in the middle
   return accentForOne(m, key).cata({
     Accented: result => VowelResult.Accented(h + result + t),
     Undone: result => VowelResult.Undone(h + result + t),
