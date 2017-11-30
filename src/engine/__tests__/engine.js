@@ -17,7 +17,8 @@ describe('Engine', () => {
       ['p', '6', 'p6']
     ]
 
-    cases.forEach(([str, key, expected]) =>
-      expect(Engine(str, key)).toBe(expected))
+    const en = Engine({ inputMethod: 'VNI' })
+
+    cases.forEach(([str, key, expected]) => expect(en.transform(str, key)).toBe(expected))
   })
 })

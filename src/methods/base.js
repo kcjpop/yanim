@@ -8,7 +8,7 @@ const { ACCENT_INPUT_MAP, VowelResult } = require('../constants')
  * @param  {String} k
  * @return {String|Boolean} Return accented vowel, or false
  */
-function accentForOne (char, k) {
+function accentForOne(char, k) {
   const key = String(k)
 
   // First case, char is a vowel without accents, e.g. a e i o u
@@ -17,10 +17,9 @@ function accentForOne (char, k) {
 
   // Try to put accent for it, e.g. a + 1 = á
   // If not, return false
+
   if (!combination) {
-    return ACCENT_INPUT_MAP[char + key]
-      ? VowelResult.Accented(ACCENT_INPUT_MAP[char + key])
-      : VowelResult.None
+    return ACCENT_INPUT_MAP[char + key] ? VowelResult.Accented(ACCENT_INPUT_MAP[char + key]) : VowelResult.None
   }
 
   // Next case, non-root vowels
@@ -29,11 +28,7 @@ function accentForOne (char, k) {
 
   // Edge case for Ă <=> Â and Ơ <=> Ô when they can be interchangeable
   const SWAPPABLE_KEYS = { a: ['6', '8'], o: ['6', '7'] }
-  if (
-    !keys.includes(key) &&
-    SWAPPABLE_KEYS[vowel] &&
-    SWAPPABLE_KEYS[vowel].includes(key)
-  ) {
+  if (!keys.includes(key) && SWAPPABLE_KEYS[vowel] && SWAPPABLE_KEYS[vowel].includes(key)) {
     // For example, â = [a, 6]. Replace 6 with 8 to have [a, 8] = ă
     // Work with other accent marks as well
     // ẳ = [a, 3, 8] changes to [a, 3, 6] = ẩ
@@ -55,14 +50,11 @@ function accentForOne (char, k) {
   const MARKS = ['1', '2', '3', '4', '5']
   const [firstKey] = keys
   // If we are changing marks, e.g. ắ [a, 1, 8] + 2 = ằ [a, 2, 8]
-  const newKeys = MARKS.includes(firstKey) && MARKS.includes(key)
-    ? keys.map(k => k === firstKey ? key : k)
-    : [...keys, key] // @NOTE: Maybe this will never happen
+  const newKeys =
+    MARKS.includes(firstKey) && MARKS.includes(key) ? keys.map(k => (k === firstKey ? key : k)) : [...keys, key] // @NOTE: Maybe this will never happen
 
   const newCom = [vowel, ...newKeys.sort()].join('')
-  return ACCENT_INPUT_MAP[newCom]
-    ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
-    : VowelResult.None
+  return ACCENT_INPUT_MAP[newCom] ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom]) : VowelResult.None
 }
 
 /**
@@ -72,7 +64,7 @@ function accentForOne (char, k) {
  * @param  {String} key
  * @return {String|Boolean}
  */
-function accentForTwo (str, key) {
+function accentForTwo(str, key) {
   const rootVowels = removeMarks(str)
 
   // A map of invalid keys that cannot be applied on dipthongs
@@ -93,7 +85,7 @@ function accentForTwo (str, key) {
 
   // Edge cases of 'uo', 'uô', and 'uơ'
   // Accents are put at the tail vowel
-  if ((/[ưu][oôơ]/gi).test(rootVowels)) {
+  if (/[ưu][oôơ]/gi.test(rootVowels)) {
     if (key === '7') return VowelResult.Accented('ươ')
 
     return accentForOne(t, key).cata({
@@ -110,7 +102,7 @@ function accentForTwo (str, key) {
   })
 }
 
-function accentForThree (str, key) {
+function accentForThree(str, key) {
   const rootVowels = removeMarks(str)
   // head, middle, tail
   const [h, m, t] = str
@@ -135,7 +127,7 @@ function accentForThree (str, key) {
     })
   }
 
-  if ((/[uư][oôơ]/gi).test(rootVowels) && key === '7') {
+  if (/[uư][oôơ]/gi.test(rootVowels) && key === '7') {
     return accentForOne(m, key).cata({
       Accented: result => VowelResult.Accented('ư' + result + t),
       Undone: result => VowelResult.Undone('u' + result + t),
@@ -151,7 +143,7 @@ function accentForThree (str, key) {
   })
 }
 
-function transform (str, key) {
+function transform(str, key) {
   const map = {
     1: accentForOne,
     2: accentForTwo,
