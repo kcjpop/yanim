@@ -93,8 +93,8 @@ function accentForTwo (str, key) {
 
   // Edge cases of 'uo', 'uô', and 'uơ'
   // Accents are put at the tail vowel
-  if ((/[ưu][oôơ]/i).test(rootVowels)) {
-    if (key === '7') return 'ươ'
+  if ((/[ưu][oôơ]/gi).test(rootVowels)) {
+    if (key === '7') return VowelResult.Accented('ươ')
 
     return accentForOne(t, key).cata({
       Accented: result => VowelResult.Accented(h + result),
@@ -111,6 +111,7 @@ function accentForTwo (str, key) {
 }
 
 function accentForThree (str, key) {
+  const rootVowels = removeMarks(str)
   // head, middle, tail
   const [h, m, t] = str
   const invalid = {
@@ -125,11 +126,19 @@ function accentForThree (str, key) {
   }
   if (invalid[str] != null && invalid[str].includes(key)) return VowelResult.None
 
-  // Edge case to put accent for tail vowel
+  // Edge case to put accent on tail vowel
   if (h === 'u' && m === 'y' && t !== 'u') {
     return accentForOne(t, key).cata({
       Accented: result => VowelResult.Accented(h + m + result),
       Undone: result => VowelResult.Undone(h + m + result),
+      None: () => this
+    })
+  }
+
+  if ((/[uư][oôơ]/gi).test(rootVowels) && key === '7') {
+    return accentForOne(m, key).cata({
+      Accented: result => VowelResult.Accented('ư' + result + t),
+      Undone: result => VowelResult.Undone('u' + result + t),
       None: () => this
     })
   }

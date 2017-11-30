@@ -14,6 +14,9 @@ const { DIPHTHONG_LENGTH, TRIPHTHONG_LENGTH, TRIPHTHONGS, DIPHTHONGS } = require
 function findVowelCombination (s) {
   const str = s.toLowerCase()
 
+  // Edge case
+  if (str[0] === 'd') return ['d', 0]
+
   // First, find vowel starting from the end
   const vowelPosition = findLastVowelPosition(str)
   if (vowelPosition == null) return null

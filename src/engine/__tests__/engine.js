@@ -11,6 +11,9 @@ describe('Engine', () => {
       ['không', '6', 'khong6'],
       ['xuống', '6', 'xuóng6'],
       ['nguyên', '6', 'nguyen6'],
+      ['duoi', '9', 'đuoi'],
+      ['đuoi', '7', 'đươi'],
+      ['đươi', '2', 'đười'],
       ['p', '6', 'p6']
     ]
 

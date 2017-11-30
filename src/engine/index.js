@@ -9,7 +9,9 @@ module.exports = function (str, key) {
 
   const [vowels, position] = buffer
 
-  return transform(vowels, key).cata({
+  const accented = transform(vowels, key)
+  if (accented.cata == null) console.log(accented)
+  return accented.cata({
     Accented: result => reconstructString(str, position, result),
     Undone: result => reconstructString(str, position, result) + key,
     None: () => str + key
