@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "YAVIM",
+  "version": "0.1.0",
+  "description": "Yet ANother (Vietnamese) Input Method",
+  "icons": {
+    "48": "icons/icon-48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["index.js"]
+    }
+  ]
+}
