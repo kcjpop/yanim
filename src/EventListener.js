@@ -1,10 +1,12 @@
-const { isMetaKey } = require('./utils')
+const { isMetaKey, isCombiningKeys } = require('./utils')
 
 module.exports = function(selector, processor) {
   const elements = document.querySelectorAll(selector)
   if (elements) {
     elements.forEach(el => {
-      el.addEventListener('keypress', e => {
+      el.addEventListener('keydown', e => {
+        if (isCombiningKeys(e)) return
+
         !isMetaKey(e.key) && e.preventDefault()
         const { target } = e
 

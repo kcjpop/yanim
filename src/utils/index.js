@@ -9,7 +9,11 @@ function lastIndexOf(str, predicate, startIndex = null) {
 }
 exports.lastIndexOf = lastIndexOf
 
+// Check if keycode is of a non-printable character
 exports.isMetaKey = keyCode => !/^[a-zA-Z0-9]$/gi.test(keyCode)
+
+// Use to detect keyboard shortcuts
+exports.isCombiningKeys = e => e.ctrlKey || e.metaKey
 
 exports.findLastVowelPosition = buffer => lastIndexOf(buffer.toLowerCase(), char => ACCENTED_VOWELS.includes(char))
 
