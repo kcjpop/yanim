@@ -1,28 +1,24 @@
-const m = require('mithril')
 const Processor = require('./processor')
 const Engine = require('./engine')
 const { isMetaKey } = require('./utils')
 
-const App = function(vnode) {
+{
   const engine = Engine({ inputMethod: 'VNI' })
   const processor = Processor(engine)
 
-  const onkeypress = e => {
-    !isMetaKey(e.key) && e.preventDefault()
+  // const elements = document.querySelectorAll('textarea, input[type=text]')
+  const elements = document.querySelectorAll('textarea, input[type=text], [contenteditable]')
+  if (elements) {
+    elements.forEach(el => {
+      el.addEventListener('keypress', e => {
+        !isMetaKey(e.key) && e.preventDefault()
+        const { target } = e
+        if (target.isContentEditable) {
+          return (target.innerHTML = processor.process(target.innerHTML, e.key))
+        }
 
-    const res = processor.process(e.target.value, e.key)
-    vnode.state.value = res
+        target.value = processor.process(target.value, e.key)
+      })
+    })
   }
-
-  const view = () => {
-    return m(
-      '.mw8.center.pa3',
-      m('h1.f2', 'Textarea'),
-      m('textarea.system-sans-serif.w-100.h5', { onkeypress, value: vnode.state.value })
-    )
-  }
-
-  return { view }
 }
-
-m.mount(document.body, App)

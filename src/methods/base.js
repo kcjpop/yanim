@@ -83,8 +83,8 @@ function accentForTwo(str, key) {
     au: '8',
     ưi: '4',
     ưu: '4',
-    uơ: '12345', // @note
-    uu: '12345', // @note
+    uơ: '12345',
+    uu: '12345',
     uy: '7'
   }
   if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key)) return VowelResult.None
