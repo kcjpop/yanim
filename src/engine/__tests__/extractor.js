@@ -11,6 +11,7 @@ describe('Extractor', () => {
     ]
 
     cases.forEach(([str, expected]) =>
-      expect(findVowelCombination(str)).toEqual(expected))
+      expect(findVowelCombination(str)).toEqual(expected)
+    )
   })
 })

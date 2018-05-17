@@ -1,5 +1,10 @@
 const { findLastVowelPosition, removeMarks } = require('../utils')
-const { DIPHTHONG_LENGTH, TRIPHTHONG_LENGTH, TRIPHTHONGS, DIPHTHONGS } = require('../constants')
+const {
+  DIPHTHONG_LENGTH,
+  TRIPHTHONG_LENGTH,
+  TRIPHTHONGS,
+  DIPHTHONGS
+} = require('../constants')
 
 // Given a lowercased string, find possible vowels, dipthongs or triphthongs
 // that needs to be put accents on. For example,
@@ -11,7 +16,7 @@ const { DIPHTHONG_LENGTH, TRIPHTHONG_LENGTH, TRIPHTHONGS, DIPHTHONGS } = require
 // Return substring and its starting index
 //
 // String -> [String, Int]
-function findVowelCombination (s) {
+function findVowelCombination(s) {
   const str = s.toLowerCase()
 
   // Edge case
@@ -26,7 +31,8 @@ function findVowelCombination (s) {
   const indexTripth = vowelPosition - TRIPHTHONG_LENGTH + 1
   if (indexTripth >= 0) {
     const lastThree = str.substr(indexTripth, TRIPHTHONG_LENGTH)
-    if (TRIPHTHONGS.includes(removeMarks(lastThree))) return [lastThree, indexTripth]
+    if (TRIPHTHONGS.includes(removeMarks(lastThree)))
+      return [lastThree, indexTripth]
   }
 
   // Not a triphthong, let's check if it's a diphthong

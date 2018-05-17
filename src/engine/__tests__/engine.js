@@ -21,7 +21,9 @@ describe('Engine', () => {
 
     const en = Engine({ inputMethod: 'VNI' })
 
-    cases.forEach(([str, key, expected]) => expect(en.transform(str, key)).toBe(expected))
+    cases.forEach(([str, key, expected]) =>
+      expect(en.transform(str, key)).toBe(expected)
+    )
   })
 
   it('should keep cases the same', () => {
@@ -37,6 +39,8 @@ describe('Engine', () => {
 
     const en = Engine({ inputMethod: 'VNI' })
 
-    cases.forEach(([str, key, expected]) => expect(en.transform(str, key)).toBe(expected))
+    cases.forEach(([str, key, expected]) =>
+      expect(en.transform(str, key)).toBe(expected)
+    )
   })
 })

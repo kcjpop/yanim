@@ -19,7 +19,9 @@ function accentForOne(char, k) {
   // If not, return false
 
   if (!combination) {
-    return ACCENT_INPUT_MAP[char + keyCode] ? VowelResult.Accented(ACCENT_INPUT_MAP[char + keyCode]) : VowelResult.None
+    return ACCENT_INPUT_MAP[char + keyCode]
+      ? VowelResult.Accented(ACCENT_INPUT_MAP[char + keyCode])
+      : VowelResult.None
   }
 
   // Next case, non-root vowels
@@ -30,14 +32,24 @@ function accentForOne(char, k) {
 
   // Put hat/horn for vowels having tone mark already
   // E.g. á + 8 = ắ, ó + 6 = ố
-  if (keys.length === 1 && MARKS.includes(firstKey) && ['6', '8', '7'].includes(keyCode)) {
+  if (
+    keys.length === 1 &&
+    MARKS.includes(firstKey) &&
+    ['6', '8', '7'].includes(keyCode)
+  ) {
     const newCom = [vowel, ...[...keys, keyCode].sort()].join('')
-    return ACCENT_INPUT_MAP[newCom] ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom]) : VowelResult.None
+    return ACCENT_INPUT_MAP[newCom]
+      ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
+      : VowelResult.None
   }
 
   // Edge case for Ă <=> Â and Ơ <=> Ô when they can be interchangeable
   const SWAPPABLE_KEYS = { a: ['6', '8'], o: ['6', '7'] }
-  if (!keys.includes(keyCode) && SWAPPABLE_KEYS[vowel] && SWAPPABLE_KEYS[vowel].includes(keyCode)) {
+  if (
+    !keys.includes(keyCode) &&
+    SWAPPABLE_KEYS[vowel] &&
+    SWAPPABLE_KEYS[vowel].includes(keyCode)
+  ) {
     // For example, â = [a, 6]. Replace 6 with 8 to have [a, 8] = ă
     // Work with other accent marks as well
     // ẳ = [a, 3, 8] changes to [a, 3, 6] = ẩ
@@ -63,7 +75,9 @@ function accentForOne(char, k) {
       : [...keys, keyCode] // @NOTE: Maybe this will never happen
 
   const newCom = [vowel, ...newKeys.sort()].join('')
-  return ACCENT_INPUT_MAP[newCom] ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom]) : VowelResult.None
+  return ACCENT_INPUT_MAP[newCom]
+    ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
+    : VowelResult.None
 }
 
 /**
@@ -87,7 +101,8 @@ function accentForTwo(str, key) {
     uu: '12345',
     uy: '7'
   }
-  if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key)) return VowelResult.None
+  if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key))
+    return VowelResult.None
 
   // Split the dipthong into head and tail
   const [h, t] = str
@@ -122,7 +137,8 @@ function accentForThree(str, key) {
     uyu: '12',
     yêu: '5'
   }
-  if (invalid[str] != null && invalid[str].includes(key)) return VowelResult.None
+  if (invalid[str] != null && invalid[str].includes(key))
+    return VowelResult.None
 
   // For UYE, and UYÊ, accent is put in the last vowel
   if (/uy[eê]/gi.test(rootVowels)) {
@@ -138,7 +154,8 @@ function accentForThree(str, key) {
     return accentForOne(m, key).cata({
       // This is a hack, try to understand it by yourself.
       // Examples: ươi + 6, uôi + 7
-      Accented: result => VowelResult.Accented((key === '6' ? 'u' : 'ư') + result + t),
+      Accented: result =>
+        VowelResult.Accented((key === '6' ? 'u' : 'ư') + result + t),
       Undone: result => VowelResult.Undone('u' + result + t),
       None: () => this
     })

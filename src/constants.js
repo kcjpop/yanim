@@ -82,7 +82,8 @@ const ACCENT_INPUT_MAP = Object.keys(ACCENT_MAP).reduce((acc, k) => {
   return acc
 }, {})
 
-const ACCENTED_VOWELS = 'aáàảãạăắằẳẵặâấầẩẫậeéèẻẽẹêếềểễệiíìỉĩịoóòỏõọôốồổỗộơớờởỡợuúùủũụưứừửữựyýỳỷỹỵ'
+const ACCENTED_VOWELS =
+  'aáàảãạăắằẳẵặâấầẩẫậeéèẻẽẹêếềểễệiíìỉĩịoóòỏõọôốồổỗộơớờởỡợuúùủũụưứừửữựyýỳỷỹỵ'
 
 const DIPHTHONG_LENGTH = 2
 

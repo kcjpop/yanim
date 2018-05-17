@@ -31,7 +31,9 @@ module.exports = function(selector, processor) {
       !isMetaKey(e.key) && e.preventDefault()
 
       const cursorPosition = getCursorPosition(target) - 1
-      const content = target.isContentEditable ? target.textContent : target.value
+      const content = target.isContentEditable
+        ? target.textContent
+        : target.value
 
       // Special handling for [contenteditable]
       if (target.isContentEditable) {
