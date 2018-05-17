@@ -21,7 +21,7 @@ const restoreCase = (source, target) => {
     )
 }
 
-module.exports = function(options) {
+module.exports = function() {
   const putAccent = (word, key) => {
     const buffer = findVowelCombination(word)
     if (!buffer || buffer.length === 0) return word + key

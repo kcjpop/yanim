@@ -110,7 +110,7 @@ describe('To put accents for one vowel', () => {
       ['p', '9']
     ]
 
-    cases.forEach(([vowel, keyCode, expected]) =>
+    cases.forEach(([vowel, keyCode]) =>
       expect(VowelResult.None.is(accentForOne(vowel, keyCode))).toBe(true)
     )
   })
@@ -154,7 +154,7 @@ describe('To put accents for triphthongs', () => {
     )
 
     const invalid = [['uyu', '1'], ['uyu', '2'], ['yêu', '5']]
-    invalid.forEach(([triphthongs, keyCode, result]) =>
+    invalid.forEach(([triphthongs, keyCode]) =>
       expect(VowelResult.None.is(accentForThree(triphthongs, keyCode))).toBe(
         true
       )
