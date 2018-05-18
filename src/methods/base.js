@@ -109,7 +109,7 @@ function accentForTwo(str, key) {
 
   // Edge cases of 'uo', 'uô', and 'uơ'
   // Accents are put at the tail vowel
-  if (/[ưu][oôơ]/gi.test(rootVowels)) {
+  if (/[ưu][oôơ]/g.test(rootVowels)) {
     if (key === '7') return VowelResult.Accented('ươ')
 
     return accentForOne(t, key).cata({

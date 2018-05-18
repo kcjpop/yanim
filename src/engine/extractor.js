@@ -6,21 +6,26 @@ const {
   DIPHTHONGS
 } = require('../constants')
 
-// Given a lowercased string, find possible vowels, dipthongs or triphthongs
+// Given a string, find possible vowels, dipthongs or triphthongs
 // that needs to be put accents on. For example,
 //  "khong" => "o"
 //  "xuống" => "uố"
 //  "nguyên" => "uyê"
 //
 // Cursor position is assumed at the end of the string.
-// Return substring and its starting index
+// Return substring and combination starting index
 //
 // String -> [String, Int]
 function findVowelCombination(s) {
+  // Change to lowercase so we don't need to operate on both lower and uppercase
+  // characters
   const str = s.toLowerCase()
 
-  // Edge case
+  // Edge case: 'd' is a possible letter to put accent on
   if (str[0] === 'd') return ['d', 0]
+
+  // Edge case: words starting with 'qu'
+  // @TODO
 
   // First, find vowel starting from the end
   const vowelPosition = findLastVowelPosition(str)

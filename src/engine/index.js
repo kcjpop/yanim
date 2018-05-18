@@ -1,10 +1,10 @@
 const { findVowelCombination } = require('./extractor')
 const { transform } = require('../methods/base')
 
-const reconstructString = (str, position, accented) =>
-  str.substring(0, position) +
+const reconstructWord = (word, accentedPosition, accented) =>
+  word.substring(0, accentedPosition) +
   accented +
-  str.substring(position + accented.length)
+  word.substring(accentedPosition + accented.length)
 
 const isUpper = str => str.toUpperCase() === str
 
@@ -26,15 +26,15 @@ module.exports = function() {
     const buffer = findVowelCombination(word)
     if (!buffer || buffer.length === 0) return word + key
 
+    // Detected vowel combination and try to put accents onto it
     const [vowels, position] = buffer
-
     const accented = transform(vowels, key)
 
     return accented.cata({
       Accented: result =>
-        restoreCase(word, reconstructString(word, position, result)),
+        restoreCase(word, reconstructWord(word, position, result)),
       Undone: result =>
-        restoreCase(word, reconstructString(word, position, result)) + key,
+        restoreCase(word, reconstructWord(word, position, result)) + key,
       None: () => word + key
     })
   }

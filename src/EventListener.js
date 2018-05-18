@@ -1,19 +1,45 @@
 /* global window */
 const { isMetaKey, isCombiningKeys } = require('./utils')
 
-const getCursorPosition = function(el) {
-  if (el.isContentEditable) {
-    el.focus()
-    console.log(el, el.innerHTML, el.selectionStart, el.selectionEnd)
-    const range = window.getSelection().getRangeAt(0)
-    const cloned = range.cloneRange()
-    cloned.selectNodeContents(el)
-    cloned.setEnd(range.endContainer, range.endOffset)
-    console.log(cloned)
-    return cloned.toString().length
-  }
+function getFirstRange() {
+  const s = window.getSelection()
 
-  return el.selectionStart
+  return s.rangeCount > 0 ? s.getRangeAt(0) : null
+}
+
+function handleInput(e, processor) {
+  const { target } = e
+
+  const cursorPosition = target.selectionStart - 1
+  const result = processor.process(target.value, e.key, cursorPosition)
+  if (result != null) {
+    const [accented, newCursor] = result
+    target.value = accented
+    target.selectionStart = newCursor
+    target.selectionEnd = newCursor
+  }
+}
+
+function handleContenteditable(e, processor) {
+  const { target } = e
+  const range = getFirstRange()
+  if (!range) return
+
+  const content = range.startContainer.textContent
+  const position = range.startOffset - 1
+  const node = range.startContainer
+
+  const result = processor.process(content, e.key, position)
+  if (result == null) return
+
+  const [accented, newPosition] = result
+  node.textContent = accented
+  const r = getFirstRange()
+  if (r) {
+    r.selectNodeContents(node)
+    r.setStart(node, newPosition)
+    r.setEnd(node, newPosition)
+  }
 }
 
 module.exports = function(selector, processor) {
@@ -22,7 +48,6 @@ module.exports = function(selector, processor) {
   if (elements.length === 0) return
   elements.forEach(el => {
     el.addEventListener('keydown', e => {
-      const { target } = e
       // If a shortcut is pressing, we do nothing
       if (isCombiningKeys(e)) return
 
@@ -30,30 +55,12 @@ module.exports = function(selector, processor) {
       // input content won't be duplicated
       !isMetaKey(e.key) && e.preventDefault()
 
-      const cursorPosition = getCursorPosition(target) - 1
-      const content = target.isContentEditable
-        ? target.textContent
-        : target.value
-
       // Special handling for [contenteditable]
-      if (target.isContentEditable) {
-        const result = processor.process(content, e.key, cursorPosition)
-        if (result) {
-          const [accented, newCursor] = result
-          target.textContent = accented
-          console.log(accented, newCursor)
-          window.getSelection().collapseToEnd()
-          return
-        }
+      if (e.target.isContentEditable) {
+        return handleContenteditable(e, processor)
       }
 
-      const result = processor.process(target.value, e.key, cursorPosition)
-      if (result != null) {
-        const [accented, newCursor] = result
-        target.value = accented
-        target.selectionStart = newCursor
-        target.selectionEnd = newCursor
-      }
+      return handleInput(e, processor)
     })
   })
 }

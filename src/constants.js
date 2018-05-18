@@ -75,12 +75,10 @@ const ACCENT_MAP = {
   đ: 'd9'
 }
 
-const ACCENT_INPUT_MAP = Object.keys(ACCENT_MAP).reduce((acc, k) => {
-  const v = ACCENT_MAP[k]
-  acc[k] = v
-  acc[v] = k
-  return acc
-}, {})
+const ACCENT_INPUT_MAP = Object.entries(ACCENT_MAP).reduce(
+  (acc, [key, value]) => Object.assign(acc, { [key]: value, [value]: key }),
+  {}
+)
 
 const ACCENTED_VOWELS =
   'aáàảãạăắằẳẵặâấầẩẫậeéèẻẽẹêếềểễệiíìỉĩịoóòỏõọôốồổỗộơớờởỡợuúùủũụưứừửữựyýỳỷỹỵ'
