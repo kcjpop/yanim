@@ -6,6 +6,22 @@ const {
   DIPHTHONGS
 } = require('../constants')
 
+function extractQuWords(s) {
+  const START_INDEX = 2
+  const str = s.substr(START_INDEX)
+  const vowelPosition = findLastVowelPosition(str)
+
+  if (vowelPosition == null) return null
+
+  const index2 = vowelPosition - 1
+  if (index2 > START_INDEX) {
+    const lastTwo = str.substr(index2, 2)
+    if (contains(DIPHTHONGS, lastTwo)) return [lastTwo, index2 + START_INDEX]
+  }
+
+  return [str[vowelPosition], vowelPosition + START_INDEX]
+}
+
 // Given a string, find possible vowels, dipthongs or triphthongs
 // that needs to be put accents on. For example,
 //  "khong" => "o"
@@ -22,10 +38,10 @@ function findVowelCombination(s) {
   const str = s.toLowerCase()
 
   // Edge case: 'd' is a possible letter to put accent on
-  if (str[0] === 'd') return ['d', 0]
+  if (str.startsWith('d')) return ['d', 0]
 
   // Edge case: words starting with 'qu'
-  // @TODO
+  if (str.startsWith('qu')) return extractQuWords(str)
 
   // First, find vowel starting from the end
   const vowelPosition = findLastVowelPosition(str)
