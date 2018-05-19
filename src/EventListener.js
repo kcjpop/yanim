@@ -1,10 +1,17 @@
-/* global window */
+/* global document */
 const { isMetaKey, isCombiningKeys } = require('./utils')
+const l = console.log
 
 function getFirstRange() {
-  const s = window.getSelection()
+  const s = document.getSelection()
 
   return s.rangeCount > 0 ? s.getRangeAt(0) : null
+}
+
+function hasSelection(target) {
+  if (target.isContentEditable)
+    return document.getSelection().toString().length > 0
+  return target.selectionStart !== target.selectionEnd
 }
 
 function handleInput(e, processor) {
@@ -12,6 +19,8 @@ function handleInput(e, processor) {
 
   const cursorPosition = target.selectionStart - 1
   const result = processor.process(target.value, e.key, cursorPosition)
+  const range = getFirstRange()
+
   if (result != null) {
     const [accented, newCursor] = result
     target.value = accented
@@ -33,7 +42,7 @@ function handleContenteditable(e, processor) {
   if (result == null) return
 
   const [accented, newPosition] = result
-  node.textContent = accented
+  node.data = accented
   const r = getFirstRange()
   if (r) {
     r.selectNodeContents(node)
@@ -48,8 +57,10 @@ module.exports = function(selector, processor) {
   if (elements.length === 0) return
   elements.forEach(el => {
     el.addEventListener('keydown', e => {
-      // If a shortcut is pressing, we do nothing
-      if (isCombiningKeys(e)) return
+      // If a shortcut is pressing, or there is text selection on target node,
+      // we do nothing
+      // TODO: we might want to select text and press accent key, but that's for future I guess
+      if (isCombiningKeys(e) || hasSelection(e.target)) return
 
       // Prevent default when user is entering printable character, so that
       // input content won't be duplicated
