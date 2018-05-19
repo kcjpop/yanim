@@ -115,7 +115,7 @@ function accentForTwo(str, key) {
     return accentForOne(t, key).cata({
       Accented: result => VowelResult.Accented(h + result),
       Undone: result => VowelResult.Undone(h + result),
-      None: () => this
+      None: () => VowelResult.Undone(str)
     })
   }
 

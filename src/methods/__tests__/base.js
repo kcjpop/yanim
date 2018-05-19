@@ -132,6 +132,14 @@ describe('To put accents for dipthongs', () => {
       expect(accentForTwo(dipthongs, keyCode)).toEqual({ result })
     )
   })
+
+  it('should handle "uo" case', () => {
+    const cases = [['uo', 'i', 'uo'], ['ưo', 'i', 'ưo'], ['ườ', 'i', 'ườ']]
+
+    cases.forEach(([dipthongs, keyCode, result]) =>
+      expect(accentForTwo(dipthongs, keyCode)).toEqual({ result })
+    )
+  })
 })
 
 describe('To put accents for triphthongs', () => {
