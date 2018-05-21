@@ -1,6 +1,5 @@
 /* global document */
 const { isMetaKey, isCombiningKeys } = require('./utils')
-const l = console.log
 
 function getFirstRange() {
   const s = document.getSelection()
@@ -36,18 +35,25 @@ function handleContenteditable(e, processor) {
 
   const content = range.startContainer.textContent
   const position = range.startOffset - 1
-  const node = range.startContainer
+  const firstChild = range.startContainer.firstChild
+    ? range.startContainer.firstChild
+    : range.startContainer
+  const node = firstChild.nodeName === 'BR' ? firstChild.parentNode : firstChild
 
   const result = processor.process(content, e.key, position)
   if (result == null) return
 
   const [accented, newPosition] = result
-  node.data = accented
+  // TEXT_NODE = 3
+  node[node.nodeType === 3 ? 'data' : 'textContent'] = accented
+
   const r = getFirstRange()
+  const pos = newPosition <= node.textContent.length ? newPosition : 0
+  console.table(node, { newPosition, pos })
   if (r) {
     r.selectNodeContents(node)
-    r.setStart(node, newPosition)
-    r.setEnd(node, newPosition)
+    r.setStart(node, pos)
+    r.setEnd(node, pos)
   }
 }
 
@@ -56,6 +62,7 @@ module.exports = function(selector, processor) {
 
   if (elements.length === 0) return
   elements.forEach(el => {
+    console.log(':: YAVIM loaded on ', el)
     el.addEventListener('keydown', e => {
       // If a shortcut is pressing, or there is text selection on target node,
       // we do nothing
