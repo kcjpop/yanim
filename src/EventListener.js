@@ -57,28 +57,51 @@ function handleContenteditable(e, processor) {
   }
 }
 
-module.exports = function(selector, processor) {
-  const elements = document.querySelectorAll(selector)
+function attachEventHandler(el, processor) {
+  // Don't want to attach handler twice
+  if (el.dataset.yavim) return
 
-  if (elements.length === 0) return
-  elements.forEach(el => {
-    console.log(':: YAVIM loaded on ', el)
-    el.addEventListener('keydown', e => {
-      // If a shortcut is pressing, or there is text selection on target node,
-      // we do nothing
-      // TODO: we might want to select text and press accent key, but that's for future I guess
-      if (isCombiningKeys(e) || hasSelection(e.target)) return
+  // console.log(':: YAVIM loaded on ', el)
+  el.dataset.yavim = true
+  el.addEventListener('keydown', e => {
+    // If a shortcut is pressing, or there is text selection on target node,
+    // we do nothing
+    // TODO: we might want to select text and press accent key, but that's for future I guess
+    if (isCombiningKeys(e) || hasSelection(e.target)) return
 
-      // Prevent default when user is entering printable character, so that
-      // input content won't be duplicated
-      !isMetaKey(e.key) && e.preventDefault()
+    // Prevent default when user is entering printable character, so that
+    // input content won't be duplicated
+    !isMetaKey(e.key) && e.preventDefault()
 
-      // Special handling for [contenteditable]
-      if (e.target.isContentEditable) {
-        return handleContenteditable(e, processor)
-      }
+    // Special handling for [contenteditable]
+    if (e.target.isContentEditable) {
+      return handleContenteditable(e, processor)
+    }
 
-      return handleInput(e, processor)
-    })
+    return handleInput(e, processor)
   })
+}
+
+function observeDomChanges(selector, processor) {
+  const observer = new MutationObserver(records => {
+    records.forEach(node =>
+      node.addedNodes.forEach(node => {
+        if (node.matches == null) return
+
+        // Edge case: an INPUT is added without explicitly providing value for `type`
+        const isNonTypeInput = node.nodeName === 'INPUT' && node.type === 'text'
+        if (node.matches(selector) || isNonTypeInput)
+          attachEventHandler(node, processor)
+      })
+    )
+  })
+  observer.observe(document, { childList: true, subtree: true })
+}
+
+module.exports = function(selector, processor) {
+  observeDomChanges(selector, processor)
+
+  const elements = document.querySelectorAll(selector)
+  if (elements.length === 0) return
+  elements.forEach(el => attachEventHandler(el, processor))
 }
