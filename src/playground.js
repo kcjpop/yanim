@@ -10,15 +10,16 @@ const EventListener = require('./EventListener')
 
   setTimeout(() => {
     const container = document.getElementById('js-dynamic')
-    container.appendChild(document.createElement('input'))
+    const input = document.createElement('input')
+    container.appendChild(input)
 
     const textarea = document.createElement('textarea')
-    textarea.classList.add('system-sans-serif', 'w-100', 'h5')
+    textarea.classList.add('system-sans-serif', 'w-100', 'h5', 'mv3')
     container.appendChild(textarea)
 
     const contenteditable = document.createElement('div')
     contenteditable.contentEditable = true
-    contenteditable.classList.add('lh-copy', 'bg-white', 'pa3')
+    contenteditable.classList.add('lh-copy', 'bg-white', 'pa3', 'mv3')
     container.appendChild(contenteditable)
   }, 1000)
 }

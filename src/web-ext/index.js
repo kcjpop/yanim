@@ -5,8 +5,7 @@ const EventListener = require('../EventListener')
 {
   const engine = Engine({ inputMethod: 'VNI' })
   const processor = Processor(engine)
-  console.log(':: YAVIM loaded')
 
-  EventListener('textarea, input[type=text], [contenteditable]', processor)
+  EventListener('textarea, input[type=text], [contenteditable=true]', processor)
   window.YavimEventListener = EventListener
 }

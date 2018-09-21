@@ -5,32 +5,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
-  <body class="bg-near-white f4 system-sans-serif">
-    <div class="mw8 center">
-      <h1 class="f2">Textarea</h1>
-      <textarea id="js-textarea" cols="30" rows="10" class="system-sans-serif w-100 h5">Theo hãng tin Yonhap của Hàn Quốc, sáng nay (19-5) quân đội Hàn Quốc phát hiện một chiếc thuyền nhỏ chở hai người trên biển Hoàng Hải, ở khu vực phía bắc đảo Baengnyeong gần đường biên giới trên biển giữa Hàn Quốc và Triều Tiên.</textarea>
+  <body class="bg-near-white f4 system-sans-serif mv4">
+    <form action="" autocomplete="off" class="w-100 flex">
+      <div class="w-50 ph3">
+        <h1 class="f2">Textarea</h1>
+        <textarea id="js-textarea" cols="30" rows="10" class="system-sans-serif w-100 h5">Theo hãng tin Yonhap của Hàn Quốc, sáng nay (19-5) quân đội Hàn Quốc phát hiện một chiếc thuyền nhỏ chở hai người trên biển Hoàng Hải, ở khu vực phía bắc đảo Baengnyeong gần đường biên giới trên biển giữa Hàn Quốc và Triều Tiên.</textarea>
 
-      <h1 class="f2">Inputs</h1>
-      <p class="lh-copy"><input type="text" placeholder="text"></p>
-      <p class="lh-copy"><input type="email" placeholder="email"></p>
+        <h1 class="f2">Inputs</h1>
+        <p class="lh-copy"><input type="text" placeholder="text" class="w-100"></p>
+        <p class="lh-copy"><input type="email" placeholder="email" class="w-100"></p>
 
-      <h1 class="f2">Dynamically added</h1>
-      <div id="js-dynamic"></div>
+        <h1 class="f2">Empty contenteditable</h1>
+        <div contenteditable class="lh-copy bg-white pa3"></div>
 
-      <h1 class="f2">Empty contenteditable</h1>
-      <div contenteditable class="lh-copy bg-white pa3"></div>
+        <h1 class="f2">Contenteditable</h1>
+        <div contenteditable class="lh-copy bg-white pa3">một <strong>hai</strong> ba <i><u>bốn</u></i><p>hết sức <small>nguyen thi</small></p></div>
 
-      <h1 class="f2">Contenteditable</h1>
-      <div contenteditable class="lh-copy bg-white pa3">một <strong>hai</strong> ba <i><u>bốn</u></i><p>hết sức <small>nguyen thi</small></p></div>
+        <h1 class="f2">Slack</h1>
+        <div style="background-color: #fff;" class="ql-editor ql-blank" data-gramm="false" role="textbox" tabindex="1" aria-label="Jot something down" aria-multiline="true" aria-autocomplete="list" aria-expanded="false" aria-owns="chat_input_tab_ui" spellcheck="true" autocorrect="off" autocomplete="off" contenteditable="true"><p><br></p></div>
 
-      <h1 class="f2">Slack</h1>
-      <div style="background-color: #fff;" class="ql-editor ql-blank" data-gramm="false" role="textbox" tabindex="1" aria-label="Jot something down" aria-multiline="true" aria-autocomplete="list" aria-expanded="false" aria-owns="chat_input_tab_ui" spellcheck="true" autocorrect="off" autocomplete="off" contenteditable="true"><p><br></p></div>
+        <h1 class="f2">Facebook</h1>
+        <div style="background-color: #fff;" aria-autocomplete="list" aria-controls="js_7" aria-describedby="js_1" aria-expanded="false" aria-label="Kirjoita viesti…" class="notranslate _5rpu" role="combobox" spellcheck="true" style="outline: currentcolor none medium; -moz-user-select: text; white-space: pre-wrap; overflow-wrap: break-word;" tabindex="0" contenteditable="true"><div data-contents="true"><div class="" data-block="true" data-editor="1bdsk" data-offset-key="450vi-0-0"><div data-offset-key="450vi-0-0" class="_1mf _1mj"><span data-offset-key="450vi-0-0"><br data-text="true"></span></div></div></div></div>
 
-      <h1 class="f2">Facebook</h1>
-      <div style="background-color: #fff;" aria-autocomplete="list" aria-controls="js_7" aria-describedby="js_1" aria-expanded="false" aria-label="Kirjoita viesti…" class="notranslate _5rpu" role="combobox" spellcheck="true" style="outline: currentcolor none medium; -moz-user-select: text; white-space: pre-wrap; overflow-wrap: break-word;" tabindex="0" contenteditable="true"><div data-contents="true"><div class="" data-block="true" data-editor="1bdsk" data-offset-key="450vi-0-0"><div data-offset-key="450vi-0-0" class="_1mf _1mj"><span data-offset-key="450vi-0-0"><br data-text="true"></span></div></div></div></div>
+        <div aria-autocomplete="list" aria-controls="js_7" aria-describedby="js_1" aria-expanded="false" aria-label="Kirjoita viesti, @nimi..." class="notranslate _5rpu" contenteditable="true" role="combobox" spellcheck="true" tabindex="0" style="outline: none; user-select: text; white-space: pre-wrap; overflow-wrap: break-word;"><div data-contents="true"><div class="" data-block="true" data-editor="4qkfb" data-offset-key="ehscv-0-0"><div data-offset-key="ehscv-0-0" class="_1mf _1mj"><span data-offset-key="ehscv-0-0"><span data-text="true">thử gõ linh tinh</span></span></div></div></div></div>
 
-      <h1 class="f2">Twitter</h1>
-      <div aria-labelledby="tweet-box-home-timeline-label" name="tweet" id="tweet-box-home-timeline" class="tweet-box rich-editor" spellcheck="true" role="textbox" aria-multiline="true" data-placeholder-default="What’s happening?" data-placeholder-poll-composer-on="Ask a question..." data-placeholder-reply="Tweet your reply" dir="ltr" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-dropdown-4" contenteditable="true"><span class="RichEditor-pictographText" title="Grinning face" aria-label="Emoji: Grinning face" data-pictograph-text="😀" data-pictograph-image="https://abs.twimg.com/emoji/v2/72x72/1f600.png"> </span>love<br></div>
-    </div>
+        <h1 class="f2">Twitter</h1>
+        <div aria-labelledby="tweet-box-home-timeline-label" name="tweet" id="tweet-box-home-timeline" class="tweet-box rich-editor" spellcheck="true" role="textbox" aria-multiline="true" data-placeholder-default="What’s happening?" data-placeholder-poll-composer-on="Ask a question..." data-placeholder-reply="Tweet your reply" dir="ltr" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-dropdown-4" contenteditable="true"><span class="RichEditor-pictographText" title="Grinning face" aria-label="Emoji: Grinning face" data-pictograph-text="😀" data-pictograph-image="https://abs.twimg.com/emoji/v2/72x72/1f600.png"> </span>love<br></div>
+      </div>
+      <div class="w-50 ph3">
+        <h1 class="f2">Dynamically added</h1>
+        <div id="js-dynamic"></div>
+      </div>
+    </form>
   </body>
 </html>

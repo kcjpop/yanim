@@ -61,7 +61,6 @@ function attachEventHandler(el, processor) {
   // Don't want to attach handler twice
   if (el.dataset.yavim) return
 
-  // console.log(':: YAVIM loaded on ', el)
   el.dataset.yavim = true
   el.addEventListener('keydown', e => {
     // If a shortcut is pressing, or there is text selection on target node,
@@ -82,23 +81,49 @@ function attachEventHandler(el, processor) {
   })
 }
 
+function shouldEnableByDefault(el) {
+  return (
+    el.isContentEditable ||
+    (el.nodeName === 'INPUT' && el.type === 'text') ||
+    el.nodeName === 'TEXTAREA'
+  )
+}
+
+function findUpperContentEditable(el) {
+  if (el.contenteditable === 'true') return el
+  while (el.parentNode && el.parentNode.getAttribute) {
+    if (el.parentNode.getAttribute('contenteditable') === 'true')
+      return el.parentNode
+
+    el = el.parentNode
+  }
+}
+
 function observeDomChanges(selector, processor) {
   const observer = new MutationObserver(records => {
-    records.forEach(node =>
+    records.forEach(node => {
+      // Search through newly added nodes
       node.addedNodes.forEach(node => {
         if (node.matches == null) return
 
-        // Edge case: an INPUT is added without explicitly providing value for `type`
-        const isNonTypeInput = node.nodeName === 'INPUT' && node.type === 'text'
-        if (node.matches(selector) || isNonTypeInput)
-          attachEventHandler(node, processor)
+        if (node.matches(selector) || shouldEnableByDefault(node)) {
+          // FACEBOOK: SPANs having `contenteditable="inherit"` are inserted into editor, thus we need to
+          // tranverse back until a node with `contenteditable="true"` is found
+          // TODO: Bug happens when space is input
+          const target = node.isContentEditable
+            ? findUpperContentEditable(node)
+            : node
+
+          target != null && attachEventHandler(target, processor)
+        }
       })
-    )
+    })
   })
   observer.observe(document, { childList: true, subtree: true })
 }
 
 module.exports = function(selector, processor) {
+  // Attach event handlers to newly added DOM elements
   observeDomChanges(selector, processor)
 
   const elements = document.querySelectorAll(selector)
