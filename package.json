@@ -1,32 +1,31 @@
 {
   "name": "yavim",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "NODE_ENV=production webpack -p",
-    "start:watch": "webpack -w",
-    "start": "webpack-dev-server"
+    "build": "rimraf built/ && webpack -p",
+    "start": "webpack-dev-server",
+    "start:watch": "webpack -w"
   },
   "author": "An Cao <an@ancaois.me>",
   "license": "MPL-2.0",
   "devDependencies": {
-    "copy-webpack-plugin": "^4.5.1",
-    "eslint": "^4.19.1",
-    "eslint-plugin-prettier": "^2.6.0",
-    "html-webpack-plugin": "^2.30.1",
-    "jest": "^21.2.1",
-    "uglify-js": "^3.3.25",
-    "uglifyjs-webpack-plugin": "^1.2.5",
-    "webpack": "^3.12.0",
-    "webpack-dev-server": "^2.11.2"
+    "copy-webpack-plugin": "^4.5.2",
+    "eslint": "^5.6.0",
+    "html-webpack-plugin": "^3.2.0",
+    "jest": "^23.6.0",
+    "rimraf": "^2.6.2",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
   },
   "jest": {
     "verbose": true,
     "rootDir": "src"
   },
   "dependencies": {
-    "daggy": "^1.2.0"
+    "daggy": "^1.3.0"
   }
 }

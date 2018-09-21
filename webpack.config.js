@@ -1,9 +1,9 @@
 const path = require('path')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-const config = {
+module.exports = {
+  mode: process.env.NODE_ENV || 'development',
   entry: {
     main: './src/index.js',
     'addon/index': './src/web-ext/',
@@ -12,14 +12,9 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'built'),
     filename: '[name].js'
-  }
-}
-
-if (process.env.NODE_ENV === 'production') {
-  config.plugins = [new UglifyJsPlugin()]
-} else {
-  config.devtool = 'inline-source-map'
-  config.plugins = [
+  },
+  devtool: 'inline-source-map',
+  plugins: [
     new CopyWebpackPlugin([{ from: './src/web-ext/', to: 'addon' }]),
     new HtmlWebpackPlugin({
       template: 'playground.html',
@@ -27,5 +22,3 @@ if (process.env.NODE_ENV === 'production') {
     })
   ]
 }
-
-module.exports = config
