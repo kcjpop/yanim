@@ -1,3 +1,4 @@
+/* eslint-env node */
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -13,7 +14,6 @@ module.exports = {
     path: path.resolve(__dirname, 'built'),
     filename: '[name].js'
   },
-  devtool: 'inline-source-map',
   plugins: [
     new CopyWebpackPlugin([{ from: './src/web-ext/', to: 'addon' }]),
     new HtmlWebpackPlugin({
