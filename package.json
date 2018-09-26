@@ -26,6 +26,6 @@
     "rootDir": "src"
   },
   "dependencies": {
-    "daggy": "^1.3.0"
+    "unionize": "^2.1.2"
   }
 }

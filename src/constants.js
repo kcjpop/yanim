@@ -1,9 +1,12 @@
-const daggy = require('daggy')
-const VowelResult = daggy.taggedSum('VowelResult', {
-  Accented: ['result'],
-  Undone: ['result'],
-  None: []
-})
+const { unionize } = require('unionize')
+const Vowel = unionize(
+  {
+    Accented: null,
+    Unaccented: null,
+    None: {}
+  },
+  { value: 'char' }
+)
 
 const ACCENT_MAP = {
   á: 'a1',
@@ -140,5 +143,5 @@ module.exports = {
   DIPHTHONGS,
   TRIPHTHONG_LENGTH,
   TRIPHTHONGS,
-  VowelResult
+  Vowel
 }

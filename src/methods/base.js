@@ -1,5 +1,5 @@
 const { otherOfAPair, removeMarks } = require('../utils')
-const { ACCENT_INPUT_MAP, VowelResult } = require('../constants')
+const { ACCENT_INPUT_MAP, Vowel } = require('../constants')
 
 /**
  * Put accents for a single vowel
@@ -20,8 +20,8 @@ function accentForOne(char, k) {
 
   if (!combination) {
     return ACCENT_INPUT_MAP[char + keyCode]
-      ? VowelResult.Accented(ACCENT_INPUT_MAP[char + keyCode])
-      : VowelResult.None
+      ? Vowel.Accented(ACCENT_INPUT_MAP[char + keyCode])
+      : Vowel.None()
   }
 
   // Next case, non-root vowels
@@ -39,8 +39,8 @@ function accentForOne(char, k) {
   ) {
     const newCom = [vowel, ...[...keys, keyCode].sort()].join('')
     return ACCENT_INPUT_MAP[newCom]
-      ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
-      : VowelResult.None
+      ? Vowel.Accented(ACCENT_INPUT_MAP[newCom])
+      : Vowel.None()
   }
 
   // Edge case for Ă <=> Â and Ơ <=> Ô when they can be interchangeable
@@ -57,7 +57,7 @@ function accentForOne(char, k) {
     const newKeys = keys.map(k => (k === otherKey ? keyCode : k)).sort()
     const newCom = [vowel, ...newKeys].join('')
 
-    return VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
+    return Vowel.Accented(ACCENT_INPUT_MAP[newCom])
   }
 
   // Undo putting accents on vowel, e.g. ắ [a, 1, 8] + 8 = á [a, 1]
@@ -65,7 +65,7 @@ function accentForOne(char, k) {
   if (keys.includes(keyCode)) {
     const newCom = [vowel, ...keys.filter(k => k !== keyCode).sort()].join('')
 
-    return VowelResult.Undone(ACCENT_INPUT_MAP[newCom] || vowel)
+    return Vowel.Unaccented(ACCENT_INPUT_MAP[newCom] || vowel)
   }
 
   // If we are changing marks, e.g. ắ [a, 1, 8] + 2 = ằ [a, 2, 8]
@@ -76,8 +76,8 @@ function accentForOne(char, k) {
 
   const newCom = [vowel, ...newKeys.sort()].join('')
   return ACCENT_INPUT_MAP[newCom]
-    ? VowelResult.Accented(ACCENT_INPUT_MAP[newCom])
-    : VowelResult.None
+    ? Vowel.Accented(ACCENT_INPUT_MAP[newCom])
+    : Vowel.None()
 }
 
 /**
@@ -102,7 +102,7 @@ function accentForTwo(str, key) {
     uy: '7'
   }
   if (invalidKeys[rootVowels] != null && invalidKeys[rootVowels].includes(key))
-    return VowelResult.None
+    return Vowel.None()
 
   // Split the dipthong into head and tail
   const [h, t] = str
@@ -110,18 +110,18 @@ function accentForTwo(str, key) {
   // Edge cases of 'uo', 'uô', and 'uơ'
   // Accents are put at the tail vowel
   if (/[ưu][oôơ]/g.test(rootVowels)) {
-    if (key === '7') return VowelResult.Accented('ươ')
+    if (key === '7') return Vowel.Accented('ươ')
 
-    return accentForOne(t, key).cata({
-      Accented: result => VowelResult.Accented(h + result),
-      Undone: result => VowelResult.Undone(h + result),
-      None: () => VowelResult.Undone(str)
+    return Vowel.match(accentForOne(t, key), {
+      Accented: char => Vowel.Accented(h + char),
+      Unaccented: char => Vowel.Unaccented(h + char),
+      None: () => Vowel.Unaccented(str)
     })
   }
 
-  return accentForOne(h, key).cata({
-    Accented: result => VowelResult.Accented(result + t),
-    Undone: result => VowelResult.Undone(result + t),
+  return Vowel.match(accentForOne(h, key), {
+    Accented: result => Vowel.Accented(result + t),
+    Unaccented: result => Vowel.Unaccented(result + t),
     None: () => this
   })
 }
@@ -137,34 +137,32 @@ function accentForThree(str, key) {
     uyu: '12',
     yêu: '5'
   }
-  if (invalid[str] != null && invalid[str].includes(key))
-    return VowelResult.None
+  if (invalid[str] != null && invalid[str].includes(key)) return Vowel.None()
 
   // For UYE, and UYÊ, accent is put in the last vowel
   if (/uy[eê]/gi.test(rootVowels)) {
-    return accentForOne(t, key).cata({
-      Accented: result => VowelResult.Accented(h + m + result),
-      Undone: result => VowelResult.Undone(h + m + result),
+    return Vowel.match(accentForOne(t, key), {
+      Accented: char => Vowel.Accented(h + m + char),
+      Unaccented: char => Vowel.Unaccented(h + m + char),
       None: () => this
     })
   }
 
   // For UOI, UÔI, ƯƠI, UOU, and ƯƠU, they can switch between horn and hat mark
   if (/[uư][oôơ]/gi.test(rootVowels)) {
-    return accentForOne(m, key).cata({
+    return Vowel.match(accentForOne(m, key), {
       // This is a hack, try to understand it by yourself.
       // Examples: ươi + 6, uôi + 7
-      Accented: result =>
-        VowelResult.Accented((key === '6' ? 'u' : 'ư') + result + t),
-      Undone: result => VowelResult.Undone('u' + result + t),
+      Accented: char => Vowel.Accented((key === '6' ? 'u' : 'ư') + char + t),
+      Unaccented: char => Vowel.Unaccented('u' + char + t),
       None: () => this
     })
   }
 
   // For other dipthongs, accent is put in the middle
-  return accentForOne(m, key).cata({
-    Accented: result => VowelResult.Accented(h + result + t),
-    Undone: result => VowelResult.Undone(h + result + t),
+  return Vowel.match(accentForOne(m, key), {
+    Accented: char => Vowel.Accented(h + char + t),
+    Unaccented: char => Vowel.Unaccented(h + char + t),
     None: () => this
   })
 }

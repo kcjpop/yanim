@@ -1,16 +1,20 @@
 const { findVowelCombination } = require('./extractor')
 const { transform } = require('../methods/base')
+const { Vowel } = require('../constants')
 
-const reconstructWord = (word, accentedPosition, accented) =>
-  word.substring(0, accentedPosition) +
-  accented +
-  word.substring(accentedPosition + accented.length)
+const reconstructWord = (word, accentedPosition, accented) => {
+  return (
+    word.substring(0, accentedPosition) +
+    accented +
+    word.substring(accentedPosition + accented.length)
+  )
+}
 
 const isUpper = str => str.toUpperCase() === str
 
 const restoreCase = (source, target) => {
   if (source.length !== target.length)
-    throw new Error('Cannot restore case of strings with different lengths')
+    throw new Error(`Different string length:  ${source} ${target}`)
 
   return target
     .split('')
@@ -30,11 +34,11 @@ module.exports = function() {
     const [vowels, position] = buffer
     const accented = transform(vowels, key)
 
-    return accented.cata({
-      Accented: result =>
-        restoreCase(word, reconstructWord(word, position, result)),
-      Undone: result =>
-        restoreCase(word, reconstructWord(word, position, result)) + key,
+    return Vowel.match(accented, {
+      Accented: char =>
+        restoreCase(word, reconstructWord(word, position, char)),
+      Unaccented: char =>
+        restoreCase(word, reconstructWord(word, position, char)) + key,
       None: () => word + key
     })
   }
