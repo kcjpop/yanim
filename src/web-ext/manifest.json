@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
-  "name": "YAVIM",
+  "name": "lach-cach",
   "version": "1.0.0",
-  "description": "Yet Another Vietnamese Input Method",
+  "description": "Vietnamese Input Engine",
   "icons": {
     "48": "icons/icon-48.png"
   },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["*://*.slack.com/*"],
       "js": ["index.js"]
     }
   ]
